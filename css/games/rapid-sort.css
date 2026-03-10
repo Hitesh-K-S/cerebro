@@ -1,0 +1,185 @@
+/* ============================================================
+   Cerebro — Rapid Sort Game Styles
+   Processing speed / classification task
+   ============================================================ */
+
+/* ── Item Display ──────────────────────────────────────── */
+.rp-item-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    margin: 0 auto var(--space-lg);
+    position: relative;
+}
+
+.rp-item-word {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    animation: rpItemIn 0.25s ease;
+    text-align: center;
+}
+
+@keyframes rpItemIn {
+    0% {
+        transform: scale(0.6);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.rp-item-word.correct {
+    color: var(--accent-success);
+}
+
+.rp-item-word.wrong {
+    color: var(--accent-danger);
+    animation: tileWrongShake 0.3s ease;
+}
+
+/* ── Shrinking Ring Timer ──────────────────────────────── */
+.rp-ring-timer {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.05);
+}
+
+.rp-ring-timer .ring-fill {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 4px solid var(--accent-secondary);
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    transition: transform 100ms linear;
+}
+
+.rp-ring-timer .ring-fill.warning {
+    border-color: var(--accent-warm);
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+}
+
+.rp-ring-timer .ring-fill.danger {
+    border-color: var(--accent-danger);
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+}
+
+/* ── Category Buttons ──────────────────────────────────── */
+.rp-categories {
+    display: flex;
+    gap: var(--space-xl);
+    justify-content: center;
+    margin-top: var(--space-xl);
+}
+
+.rp-category-btn {
+    flex: 1;
+    max-width: 220px;
+    padding: var(--space-lg) var(--space-xl);
+    background: var(--bg-surface);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: center;
+    font-family: var(--font-primary);
+    user-select: none;
+}
+
+.rp-category-btn:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+.rp-category-btn:active {
+    transform: scale(0.96);
+}
+
+.rp-category-btn .cat-label {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--text-primary);
+    display: block;
+    margin-bottom: var(--space-xs);
+}
+
+.rp-category-btn .cat-key {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+.rp-category-btn.left {
+    border-left: 4px solid var(--accent-secondary);
+}
+
+.rp-category-btn.right {
+    border-right: 4px solid var(--accent-warm);
+}
+
+.rp-category-btn.flash-correct {
+    border-color: var(--accent-success);
+    background: rgba(0, 184, 148, 0.1);
+}
+
+.rp-category-btn.flash-wrong {
+    border-color: var(--accent-danger);
+    background: rgba(225, 112, 85, 0.1);
+}
+
+/* ── Round Banner ──────────────────────────────────────── */
+.rp-round-banner {
+    text-align: center;
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rp-round-banner h3 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--space-xs);
+}
+
+.rp-round-banner .round-cat {
+    color: var(--text-secondary);
+    font-size: var(--font-size-md);
+}
+
+.rp-round-banner .round-cat strong {
+    color: var(--accent-secondary);
+}
+
+.rp-round-banner .round-cat strong:last-child {
+    color: var(--accent-warm);
+}
+
+/* ── Throughput Display ────────────────────────────────── */
+.rp-throughput {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-top: var(--space-md);
+}
+
+.rp-throughput .throughput-val {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--accent-gold);
+}

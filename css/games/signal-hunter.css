@@ -1,0 +1,124 @@
+/* ============================================================
+   Cerebro — Signal Hunter Game Styles
+   Visual search / selective attention
+   ============================================================ */
+
+/* ── Symbol Field ──────────────────────────────────────── */
+.signal-field {
+    position: relative;
+    width: min(600px, 90vw);
+    height: min(500px, 70vh);
+    margin: 0 auto;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* ── Symbols ───────────────────────────────────────────── */
+.signal-symbol {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+    user-select: none;
+}
+
+.signal-symbol:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: scale(1.15);
+}
+
+.signal-symbol.found {
+    color: var(--accent-success);
+    background: rgba(0, 184, 148, 0.15);
+    border: 2px solid var(--accent-success);
+    pointer-events: none;
+    animation: symbolFound 0.3s ease;
+}
+
+.signal-symbol.wrong-tap {
+    color: var(--accent-danger);
+    animation: tileWrongShake 0.4s ease;
+}
+
+.signal-symbol.missed {
+    color: var(--accent-warm);
+    background: rgba(253, 121, 168, 0.15);
+    border: 2px solid var(--accent-warm);
+    pointer-events: none;
+}
+
+@keyframes symbolFound {
+    0% {
+        transform: scale(0.8);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* ── Target Preview ────────────────────────────────────── */
+.target-preview {
+    text-align: center;
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+}
+
+.target-preview .target-label {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.target-preview .target-symbol {
+    font-size: 4rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--accent-primary);
+    text-shadow: 0 0 20px var(--accent-primary-glow);
+}
+
+/* ── Found Counter ─────────────────────────────────────── */
+.found-counter {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin-top: var(--space-md);
+}
+
+.found-counter strong {
+    color: var(--accent-success);
+}
+
+/* ── Round Timer ───────────────────────────────────────── */
+.round-timer-display {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--accent-secondary);
+    margin-bottom: var(--space-md);
+}
+
+.round-timer-display.urgent {
+    color: var(--accent-danger);
+    animation: countdownPulse 0.5s ease infinite;
+}

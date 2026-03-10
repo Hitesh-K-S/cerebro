@@ -1,0 +1,330 @@
+/* ============================================================
+   Cerebro — Pattern Recall Game Styles
+   Grid, tiles, flash animations, feedback states
+   ============================================================ */
+
+/* ── Grid Container ────────────────────────────────────── */
+.pattern-grid {
+    display: grid;
+    gap: 8px;
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: var(--shadow-md);
+    width: fit-content;
+    margin: 0 auto;
+    transition: opacity var(--transition-normal);
+}
+
+/* Grid size variants (set by JS) */
+.pattern-grid.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+    width: min(340px, 80vw);
+}
+
+.pattern-grid.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+    width: min(420px, 85vw);
+}
+
+.pattern-grid.grid-5 {
+    grid-template-columns: repeat(5, 1fr);
+    width: min(500px, 90vw);
+}
+
+/* ── Tiles ─────────────────────────────────────────────── */
+.tile {
+    aspect-ratio: 1;
+    background: var(--bg-surface);
+    border: 2px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+    min-width: 60px;
+    min-height: 60px;
+}
+
+/* Inner glow layer */
+.tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at center, rgba(108, 92, 231, 0.3) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.tile:hover:not(.disabled) {
+    border-color: rgba(108, 92, 231, 0.4);
+    transform: scale(1.03);
+}
+
+.tile:hover:not(.disabled)::before {
+    opacity: 0.3;
+}
+
+.tile:active:not(.disabled) {
+    transform: scale(0.96);
+}
+
+/* ── Tile States ───────────────────────────────────────── */
+
+/* Flashing (sequence showing) */
+.tile.flash {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 24px var(--accent-primary-glow),
+        inset 0 0 20px rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+}
+
+.tile.flash::before {
+    opacity: 1;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+}
+
+/* Player tapped */
+.tile.tapped {
+    background: rgba(108, 92, 231, 0.4);
+    border-color: var(--accent-primary);
+    transform: scale(0.96);
+}
+
+/* Correct feedback */
+.tile.correct {
+    background: var(--accent-success);
+    border-color: var(--accent-success);
+    box-shadow: 0 0 20px rgba(0, 184, 148, 0.4);
+    animation: tileCorrectPulse 0.4s ease;
+}
+
+/* Wrong feedback */
+.tile.wrong {
+    background: var(--accent-danger);
+    border-color: var(--accent-danger);
+    box-shadow: 0 0 20px rgba(225, 112, 85, 0.4);
+    animation: tileWrongShake 0.5s ease;
+}
+
+/* Disabled state (during sequence showing or game over) */
+.tile.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ── Tile Animations ───────────────────────────────────── */
+
+@keyframes tileCorrectPulse {
+    0% {
+        transform: scale(0.95);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes tileWrongShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-6px);
+    }
+
+    40% {
+        transform: translateX(6px);
+    }
+
+    60% {
+        transform: translateX(-4px);
+    }
+
+    80% {
+        transform: translateX(4px);
+    }
+}
+
+/* ── Round Complete Animation ──────────────────────────── */
+.pattern-grid.round-complete .tile {
+    animation: roundCompleteWave 0.6s ease forwards;
+}
+
+.pattern-grid.round-complete .tile:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(2) {
+    animation-delay: 30ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(3) {
+    animation-delay: 60ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(4) {
+    animation-delay: 90ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(5) {
+    animation-delay: 120ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(6) {
+    animation-delay: 150ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(7) {
+    animation-delay: 180ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(8) {
+    animation-delay: 210ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(9) {
+    animation-delay: 240ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(10) {
+    animation-delay: 270ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(11) {
+    animation-delay: 300ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(12) {
+    animation-delay: 330ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(13) {
+    animation-delay: 360ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(14) {
+    animation-delay: 390ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(15) {
+    animation-delay: 420ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(16) {
+    animation-delay: 450ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(17) {
+    animation-delay: 480ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(18) {
+    animation-delay: 510ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(19) {
+    animation-delay: 540ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(20) {
+    animation-delay: 570ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(21) {
+    animation-delay: 600ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(22) {
+    animation-delay: 630ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(23) {
+    animation-delay: 660ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(24) {
+    animation-delay: 690ms;
+}
+
+.pattern-grid.round-complete .tile:nth-child(25) {
+    animation-delay: 720ms;
+}
+
+@keyframes roundCompleteWave {
+    0% {
+        background: var(--bg-surface);
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+
+    50% {
+        background: var(--accent-success);
+        border-color: var(--accent-success);
+        box-shadow: 0 0 12px rgba(0, 184, 148, 0.3);
+    }
+
+    100% {
+        background: var(--bg-surface);
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+}
+
+/* ── Score Popup (inline) ──────────────────────────────── */
+.score-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--font-size-xl);
+    color: var(--accent-gold);
+    pointer-events: none;
+    animation: scorePopup 1s ease forwards;
+    z-index: 50;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes scorePopup {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+
+    30% {
+        opacity: 1;
+        transform: translate(-50%, -60%) scale(1.2);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -120%) scale(0.8);
+    }
+}
+
+/* ── Responsive Tiles ──────────────────────────────────── */
+@media (max-width: 480px) {
+    .tile {
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    .pattern-grid {
+        gap: 6px;
+        padding: var(--space-md);
+    }
+
+    .pattern-grid.grid-5 {
+        width: min(320px, 92vw);
+    }
+}

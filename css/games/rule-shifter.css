@@ -1,0 +1,191 @@
+/* ============================================================
+   Cerebro — Rule Shifter Game Styles
+   Cognitive flexibility / set-shifting card sort
+   ============================================================ */
+
+/* ── Card ──────────────────────────────────────────────── */
+.rs-card {
+    width: 140px;
+    height: 180px;
+    background: var(--bg-surface);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0 auto var(--space-lg);
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-md);
+    position: relative;
+}
+
+.rs-card.correct-feedback {
+    border-color: var(--accent-success);
+    box-shadow: 0 0 24px rgba(0, 184, 148, 0.3);
+}
+
+.rs-card.wrong-feedback {
+    border-color: var(--accent-danger);
+    box-shadow: 0 0 24px rgba(225, 112, 85, 0.3);
+    animation: tileWrongShake 0.4s ease;
+}
+
+.rs-card .feedback-icon {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 1.3rem;
+}
+
+/* ── Card Shapes (CSS) ─────────────────────────────────── */
+.rs-shape-row {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 120px;
+}
+
+.rs-shape {
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+}
+
+.rs-shape.circle {
+    border-radius: 50%;
+}
+
+.rs-shape.square {
+    border-radius: 4px;
+}
+
+.rs-shape.triangle {
+    width: 0;
+    height: 0;
+    background: transparent !important;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-bottom-width: 28px;
+    border-bottom-style: solid;
+}
+
+.rs-shape.diamond {
+    width: 20px;
+    height: 20px;
+    transform: rotate(45deg);
+    border-radius: 3px;
+}
+
+.rs-shape.color-red {
+    background: #e74c3c;
+    border-bottom-color: #e74c3c;
+}
+
+.rs-shape.color-blue {
+    background: #3498db;
+    border-bottom-color: #3498db;
+}
+
+.rs-shape.color-green {
+    background: #2ecc71;
+    border-bottom-color: #2ecc71;
+}
+
+.rs-shape.color-yellow {
+    background: #f1c40f;
+    border-bottom-color: #f1c40f;
+}
+
+/* ── Sorting Bins ──────────────────────────────────────── */
+.rs-bins {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.rs-bin {
+    width: 120px;
+    min-height: 140px;
+    background: var(--bg-secondary);
+    border: 2px dashed rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: var(--space-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    user-select: none;
+}
+
+.rs-bin:hover {
+    border-color: var(--accent-primary);
+    background: var(--bg-surface-hover);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-glow);
+}
+
+.rs-bin.selected {
+    border-color: var(--accent-primary);
+    border-style: solid;
+    background: rgba(108, 92, 231, 0.1);
+}
+
+.rs-bin-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    margin-top: var(--space-xs);
+}
+
+/* ── Streak Meter ──────────────────────────────────────── */
+.rs-streak-meter {
+    width: 200px;
+    height: 6px;
+    background: var(--bg-surface);
+    border-radius: 3px;
+    margin: var(--space-md) auto;
+    overflow: hidden;
+}
+
+.rs-streak-fill {
+    height: 100%;
+    background: var(--grad-cool);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* ── Stats Bar ─────────────────────────────────────────── */
+.rs-stats {
+    display: flex;
+    gap: var(--space-lg);
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-top: var(--space-md);
+}
+
+.rs-stats .stat-val {
+    color: var(--accent-secondary);
+    font-weight: 600;
+}
+
+/* ── Timer ─────────────────────────────────────────────── */
+.rs-timer {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--accent-secondary);
+    margin-bottom: var(--space-md);
+}
+
+.rs-timer.urgent {
+    color: var(--accent-danger);
+}

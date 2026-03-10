@@ -1,0 +1,175 @@
+/* ============================================================
+   Cerebro — Mirror Maze Game Styles
+   Spatial reasoning / ball reflection prediction
+   ============================================================ */
+
+/* ── Maze Grid ─────────────────────────────────────────── */
+.mm-grid {
+    display: grid;
+    gap: 0;
+    margin: 0 auto;
+    background: var(--bg-secondary);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    width: fit-content;
+}
+
+.mm-grid.grid-4 {
+    grid-template-columns: repeat(6, 50px);
+    grid-template-rows: repeat(6, 50px);
+}
+
+.mm-grid.grid-5 {
+    grid-template-columns: repeat(7, 46px);
+    grid-template-rows: repeat(7, 46px);
+}
+
+.mm-grid.grid-6 {
+    grid-template-columns: repeat(8, 42px);
+    grid-template-rows: repeat(8, 42px);
+}
+
+.mm-grid.grid-7 {
+    grid-template-columns: repeat(9, 38px);
+    grid-template-rows: repeat(9, 38px);
+}
+
+.mm-grid.grid-8 {
+    grid-template-columns: repeat(10, 36px);
+    grid-template-rows: repeat(10, 36px);
+}
+
+/* ── Cells ─────────────────────────────────────────────── */
+.mm-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    position: relative;
+    font-size: 0.9rem;
+    user-select: none;
+}
+
+.mm-cell.edge {
+    background: var(--bg-surface-hover);
+}
+
+.mm-cell.edge.selectable {
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.mm-cell.edge.selectable:hover {
+    background: rgba(108, 92, 231, 0.2);
+    border-color: var(--accent-primary);
+}
+
+.mm-cell.edge.selected {
+    background: rgba(108, 92, 231, 0.3);
+    border-color: var(--accent-primary);
+    box-shadow: inset 0 0 10px var(--accent-primary-glow);
+}
+
+.mm-cell.edge.correct-exit {
+    background: rgba(0, 184, 148, 0.3);
+    border-color: var(--accent-success);
+}
+
+.mm-cell.edge.wrong-exit {
+    background: rgba(225, 112, 85, 0.3);
+    border-color: var(--accent-danger);
+}
+
+.mm-cell.entry {
+    background: rgba(249, 202, 36, 0.2);
+    border-color: var(--accent-gold);
+}
+
+/* ── Mirrors ───────────────────────────────────────────── */
+.mm-mirror {
+    width: 70%;
+    height: 70%;
+    position: relative;
+}
+
+.mm-mirror.forward-slash {
+    border-top: 3px solid var(--accent-secondary);
+    border-right: 3px solid transparent;
+    transform: rotate(-45deg);
+    border-radius: 2px;
+}
+
+.mm-mirror.back-slash {
+    border-top: 3px solid var(--accent-warm);
+    border-right: 3px solid transparent;
+    transform: rotate(45deg);
+    border-radius: 2px;
+}
+
+/* ── Ball ──────────────────────────────────────────────── */
+.mm-ball {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    box-shadow: 0 0 10px rgba(249, 202, 36, 0.6);
+    position: absolute;
+    z-index: 10;
+    transition: all 0.2s linear;
+}
+
+/* ── Path Trace ────────────────────────────────────────── */
+.mm-path-segment {
+    position: absolute;
+    background: rgba(249, 202, 36, 0.2);
+    z-index: 5;
+}
+
+/* ── Puzzle Info ────────────────────────────────────────── */
+.mm-puzzle-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 500px;
+    margin: 0 auto var(--space-md);
+}
+
+.mm-puzzle-timer {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--accent-secondary);
+}
+
+.mm-puzzle-timer.urgent {
+    color: var(--accent-danger);
+}
+
+.mm-puzzle-counter {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+/* ── Entry Arrow ───────────────────────────────────────── */
+.mm-entry-arrow {
+    font-size: 1.2rem;
+    color: var(--accent-gold);
+}
+
+/* ── Confirm Button ────────────────────────────────────── */
+.mm-confirm-row {
+    text-align: center;
+    margin-top: var(--space-lg);
+}
+
+@media (max-width: 480px) {
+    .mm-grid.grid-4 {
+        grid-template-columns: repeat(6, 42px);
+        grid-template-rows: repeat(6, 42px);
+    }
+
+    .mm-grid.grid-5 {
+        grid-template-columns: repeat(7, 38px);
+        grid-template-rows: repeat(7, 38px);
+    }
+}
