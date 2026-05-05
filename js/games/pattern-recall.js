@@ -443,7 +443,7 @@ var PatternRecall = (function ($) {
     function handleGameOver() {
         gameTimer.stop();
         setTilesDisabled(true);
-        setStatus('Game Over', 'wrong');
+        setStatus('Session complete', 'wrong');
 
         // Show game over modal
         showGameOverModal();
@@ -460,11 +460,11 @@ var PatternRecall = (function ($) {
         $('#result-badge').addClass('hidden');
 
         // Determine title based on performance
-        var title = 'Game Over';
-        if (score > 5000) title = 'Incredible! 🌟';
-        else if (score > 2000) title = 'Amazing! 🔥';
-        else if (score > 1000) title = 'Great Job! 👏';
-        else if (score > 500) title = 'Nice Try! 👍';
+        var title = 'Session Complete';
+        if (score > 5000) title = 'Outstanding Focus';
+        else if (score > 2000) title = 'Strong Progress';
+        else if (score > 1000) title = 'Nice Work';
+        else if (score > 500) title = 'Good Start';
         $('#modal-title').text(title);
 
         $('#modal-gameover').removeClass('hidden');
@@ -650,8 +650,7 @@ var PatternRecall = (function ($) {
 
         // Request session token from server
         CerebroAPI.post('/game/start', {
-            game_slug: 'pattern-recall',
-            user_id: 1 // TODO: Replace with actual user ID from auth
+            game_slug: 'pattern-recall'
         })
             .done(function (response) {
                 sessionToken = response.token;

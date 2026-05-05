@@ -281,7 +281,7 @@ var ImpulseGuard = (function ($) {
         buildUI();
         gameTimer.reset().start();
 
-        CerebroAPI.post('/game/start', { game_slug: 'impulse-guard', user_id: 1 })
+        CerebroAPI.post('/game/start', { game_slug: 'impulse-guard' })
             .done(function (r) { sessionToken = r.token; }).fail(function () { });
 
         updateDisplay();

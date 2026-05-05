@@ -6,12 +6,27 @@
  * Copy this file to config.local.php and update credentials for your environment.
  */
 
+// ── Session ──────────────────────────────────────────────
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('cerebro_session');
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    session_start();
+}
+
 // ── Database ─────────────────────────────────────────────
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'cerebro');
 define('DB_USER', 'root');
 define('DB_PASS', 'root123');
 define('DB_CHARSET', 'utf8mb4');
+
+// ── Authentication ───────────────────────────────────────
+define('GOOGLE_CLIENT_ID', getenv('GOOGLE_CLIENT_ID') ?: '');
 
 // ── Anti-Cheat Constants ─────────────────────────────────
 define('MIN_REACTION_MS_PER_TILE', 100);   // Minimum humanly possible ms per tile
@@ -31,8 +46,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, X-Game-Token');
 
-// Handle preflight
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+// Handle preflight for HTTP requests only.
+if (($_SERVER['REQUEST_METHOD'] ?? null) === 'OPTIONS') {
     http_response_code(204);
     exit;
 }

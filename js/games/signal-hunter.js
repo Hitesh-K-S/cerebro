@@ -260,7 +260,7 @@ var SignalHunter = (function ($) {
         gameTimer.reset().start();
         buildUI();
 
-        CerebroAPI.post('/game/start', { game_slug: 'signal-hunter', user_id: 1 })
+        CerebroAPI.post('/game/start', { game_slug: 'signal-hunter' })
             .done(function (r) { sessionToken = r.token; }).fail(function () { });
 
         updateDisplay();

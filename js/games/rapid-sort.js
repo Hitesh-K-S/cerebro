@@ -319,7 +319,7 @@ var RapidSort = (function ($) {
         gameTimer.reset().start();
         buildUI();
 
-        CerebroAPI.post('/game/start', { game_slug: 'rapid-sort', user_id: 1 })
+        CerebroAPI.post('/game/start', { game_slug: 'rapid-sort' })
             .done(function (r) { sessionToken = r.token; }).fail(function () { });
 
         updateDisplay();

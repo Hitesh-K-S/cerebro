@@ -5,14 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Cerebro — Train your brain with short cognitive games. Improve memory, attention, reaction time, logic, and processing speed.">
-    <title>Cerebro — Brain Training</title>
+        content="Cerebro is an interactive cognition platform for sharpening focus, memory, and mental clarity through engaging exercises.">
+    <title>Cerebro — Interactive Cognitive Exercises</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         rel="stylesheet">
 
     <!-- Styles -->
@@ -35,17 +37,15 @@
     <header id="site-header">
         <div class="header-inner">
             <div class="logo">
-                <span class="logo-icon">🧠</span>
                 <span class="logo-text">Cerebro</span>
             </div>
             <nav id="main-nav">
-                <button class="nav-btn active" data-view="dashboard">Dashboard</button>
-                <button class="nav-btn" data-view="games">Games</button>
-                <button class="nav-btn" data-view="leaderboard">Leaderboard</button>
+                <button class="nav-btn active" data-view="dashboard">Training</button>
+                <button class="nav-btn" data-view="games">Archive</button>
+                <button class="nav-btn" data-view="leaderboard">Metrics</button>
             </nav>
-            <div class="user-info">
-                <span id="user-score-badge" class="score-badge">0 pts</span>
-                <span id="user-name">Player</span>
+            <div class="user-info" id="user-session-controls">
+                <button class="header-signin-btn" type="button">Sign In</button>
             </div>
         </div>
     </header>
@@ -57,130 +57,205 @@
 
         <!-- ─── Dashboard View ─────────────────────────── -->
         <section id="view-dashboard" class="view active">
-            <div class="dashboard-hero">
-                <h1>Train Your Brain</h1>
-                <p class="hero-subtitle">Short cognitive games to sharpen your mind</p>
-            </div>
-
-            <div class="category-grid">
-                <div class="category-card" data-category="memory">
-                    <div class="card-icon">🔮</div>
-                    <h3>Memory</h3>
-                    <p>Pattern recognition & recall</p>
-                </div>
-                <div class="category-card" data-category="attention">
-                    <div class="card-icon">🎯</div>
-                    <h3>Attention</h3>
-                    <p>Focus & selective attention</p>
-                </div>
-                <div class="category-card" data-category="reaction">
-                    <div class="card-icon">⚡</div>
-                    <h3>Reaction</h3>
-                    <p>Speed & reflexes</p>
-                </div>
-                <div class="category-card" data-category="logic">
-                    <div class="card-icon">🧩</div>
-                    <h3>Logic</h3>
-                    <p>Problem solving & reasoning</p>
-                </div>
-                <div class="category-card" data-category="speed">
-                    <div class="card-icon">🚀</div>
-                    <h3>Processing</h3>
-                    <p>Mental processing speed</p>
-                </div>
+            <div class="editorial-frame">
+                <section class="dashboard-hero">
+                    <div id="hero-canvas-container" class="hero-grid-shell">
+                        <div id="interactive-grid" class="interactive-grid" aria-hidden="true"></div>
+                        <div class="hero-stage-copy">
+                            <div class="hero-chip interactive-element">Interactive Cognition Environment</div>
+                            <h1>Cerebro: <span>Interactive</span><br>Cognition.</h1>
+                            <p class="hero-subtitle">High-performance cognitive training built for focus. Hover to engage with the neural grid.</p>
+                            <div class="hero-actions interactive-element">
+                                <button class="hero-primary-btn" data-view-target="games">
+                                    Try Cerebro
+                                    <span class="material-symbols-outlined">bolt</span>
+                                </button>
+                                <div class="hero-security">
+                                    <span class="material-symbols-outlined">verified_user</span>
+                                    Neural Link Secure
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="feature-section">
+                    <div class="feature-intro">
+                        <h2>The Science of Kindness to your Mind</h2>
+                        <p>Harnessing neuroplasticity through daily playful practice.</p>
+                    </div>
+                    <div class="feature-grid">
+                        <article class="feature-card feature-card-primary">
+                            <div class="feature-icon">
+                                <span class="material-symbols-outlined">water_drop</span>
+                            </div>
+                            <h3>Mental Hydration</h3>
+                            <p>Daily exercises act like watering a garden, keeping your neural pathways fresh and resilient.</p>
+                        </article>
+                        <article class="feature-card feature-card-secondary">
+                            <div class="feature-icon">
+                                <span class="material-symbols-outlined">extension</span>
+                            </div>
+                            <h3>Synaptic Bonding</h3>
+                            <p>Strengthen connections between logic and creativity with cross-disciplinary challenges.</p>
+                        </article>
+                        <article class="feature-card feature-card-tertiary">
+                            <div class="feature-icon">
+                                <span class="material-symbols-outlined">auto_awesome</span>
+                            </div>
+                            <h3>Cognitive Bloom</h3>
+                            <p>Experience the subtle shift in focus and clarity as you nurture your brain's natural plasticity.</p>
+                        </article>
+                    </div>
+                </section>
+                <section class="gallery-section">
+                    <div class="gallery-header">
+                        <div>
+                            <span class="gallery-kicker">DAILY SELECTION</span>
+                            <h2>Games Gallery</h2>
+                        </div>
+                        <button class="gallery-link-btn" data-view-target="games">View All Games</button>
+                    </div>
+                    <div class="gallery-grid">
+                        <article class="gallery-card" data-game="pattern-recall" data-category="memory">
+                            <div class="gallery-media">
+                                <img alt="Retro pixel art puzzle interface with colorful blocks and a cozy game character" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8b0o6Uu1PVnZ1yQ3I4UTarupV5gZCWWXBIckIA3hIxqZs8k5YQJH0OzY5HsQnh_a6lhA1JipjFWW7Simewq1r_Ta-RpykqZqURlePGIKz_wtZSdoM4JT7Ub9mqk2Z0KbaIZ4JEBcSEMQ1i2H8PF0oPxmeYsTni4GRAgFzt13wU3y6uGO9W-G6_ezdcoJ1lpasZ6IpIFnFRxPzl4ujh4KFqWQyZZ6OU5ppZ2dDiDbpS-DCKAQMTphEj7wB5fX6TvjSCCcHTLZxpXU"/>
+                            </div>
+                            <div class="gallery-body">
+                                <h3>Memory Matrix</h3>
+                                <p>Master spatial recognition and pattern recall.</p>
+                                <div class="gallery-meta">
+                                    <span class="gallery-tag tag-easy">EASY</span>
+                                    <button class="gallery-play-btn btn-play" data-game="pattern-recall">Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="gallery-card" data-game="rule-shifter" data-category="logic">
+                            <div class="gallery-media">
+                                <img alt="Digital representation of connected nodes in a pixel art style, light pastel blue and lavender colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKaKtlX7io2-mRnYFAJ03d7Wr1bT0hcv-S3wTRzPUiiIoNMaGUD62OmPqDehsgAEVBSYQAE-_q44DgVL_2RObf94uC4j9w-elmS08tsZZhXdZNzNmQB4UN42lQFdk5hyWPYsYQrlAGtUtPAR-qNK5Wp9r9MU4ZipIvkTwA9fPfWSuKQr07wCUYUIcZUubll5FP-2QdFIXm4uNGtpBMg4br3fygIb4ed_xXaGeOKHLly4cTDJwn03MjoSgnU15IKPloo-aS-2mCHtc"/>
+                            </div>
+                            <div class="gallery-body">
+                                <h3>Logic Link</h3>
+                                <p>Build complex pathways of deductive reasoning.</p>
+                                <div class="gallery-meta">
+                                    <span class="gallery-tag tag-medium">MEDIUM</span>
+                                    <button class="gallery-play-btn btn-play" data-game="rule-shifter">Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="gallery-card" data-game="rapid-sort" data-category="speed">
+                            <div class="gallery-media">
+                                <img alt="Fast-paced pixel graphics showing a small running creature against a colorful sunset background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfV8-j2Sg3Gu7u_qqpGEhJIPNFrBcsR-dMmhNL-oweH_F0v3EdTGVhSH8g3fXgHOpZFHymKWgT1qxYhzFiY6oYcONhsOz95tU6P_C5A8mh2O9Vl1bZyz7Gplg5wlqlVmvxfSW7G8K3prBw27pCmiX4AJlhxb9L4s0aGrteW_iKfIi2_sDL2BecE5nPk-X-k4IGTjG6jssdoMofAvhpvUYXvOnJALm6JiIR7Uq7s0FYILiMhQS83ienL18x9jqirfR39Yro5jHuOIc"/>
+                            </div>
+                            <div class="gallery-body">
+                                <h3>Speed Sprinter</h3>
+                                <p>Sharpen reaction times and mental agility.</p>
+                                <div class="gallery-meta">
+                                    <span class="gallery-tag tag-hard">HARD</span>
+                                    <button class="gallery-play-btn btn-play" data-game="rapid-sort">Play</button>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
             </div>
         </section>
 
         <!-- ─── Games View ─────────────────────────────── -->
         <section id="view-games" class="view">
-            <div class="games-header">
-                <h2>Choose a Game</h2>
-            </div>
-            <div class="games-grid">
-                <div class="game-card" data-game="pattern-recall" id="game-card-pattern-recall">
-                    <div class="game-card-badge">Memory</div>
-                    <div class="game-card-icon">🔮</div>
-                    <h3>Pattern Recall</h3>
-                    <p>Memorize and replay the sequence of flashing tiles</p>
-                    <div class="game-card-stats">
-                        <span class="stat">Best: <strong id="best-score-display">—</strong></span>
-                        <span class="stat">Played: <strong id="games-played-display">0</strong></span>
+            <section class="gallery-section">
+                <div class="gallery-header">
+                    <div>
+                        <span class="gallery-kicker">DAILY SELECTION</span>
+                        <h2>Games Gallery</h2>
                     </div>
-                    <button class="btn btn-primary btn-play" data-game="pattern-recall">Play Now</button>
+                    <button class="gallery-link-btn" data-view-target="leaderboard">View All Games</button>
                 </div>
+                <div class="gallery-grid">
+                    <article class="gallery-card" data-game="pattern-recall" data-category="memory" id="game-card-pattern-recall">
+                        <div class="gallery-media">
+                            <img alt="Retro pixel art puzzle interface with colorful blocks and a cozy game character" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8b0o6Uu1PVnZ1yQ3I4UTarupV5gZCWWXBIckIA3hIxqZs8k5YQJH0OzY5HsQnh_a6lhA1JipjFWW7Simewq1r_Ta-RpykqZqURlePGIKz_wtZSdoM4JT7Ub9mqk2Z0KbaIZ4JEBcSEMQ1i2H8PF0oPxmeYsTni4GRAgFzt13wU3y6uGO9W-G6_ezdcoJ1lpasZ6IpIFnFRxPzl4ujh4KFqWQyZZ6OU5ppZ2dDiDbpS-DCKAQMTphEj7wB5fX6TvjSCCcHTLZxpXU"/>
+                        </div>
+                        <div class="gallery-body">
+                            <h3>Memory Matrix</h3>
+                            <p>Master spatial recognition and pattern recall.</p>
+                            <div class="gallery-meta">
+                                <span class="gallery-tag tag-easy">EASY</span>
+                                <button class="gallery-play-btn btn-play" data-game="pattern-recall">Play</button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="gallery-card" data-game="rule-shifter" data-category="logic" id="game-card-rule-shifter">
+                        <div class="gallery-media">
+                            <img alt="Digital representation of connected nodes in a pixel art style, light pastel blue and lavender colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKaKtlX7io2-mRnYFAJ03d7Wr1bT0hcv-S3wTRzPUiiIoNMaGUD62OmPqDehsgAEVBSYQAE-_q44DgVL_2RObf94uC4j9w-elmS08tsZZhXdZNzNmQB4UN42lQFdk5hyWPYsYQrlAGtUtPAR-qNK5Wp9r9MU4ZipIvkTwA9fPfWSuKQr07wCUYUIcZUubll5FP-2QdFIXm4uNGtpBMg4br3fygIb4ed_xXaGeOKHLly4cTDJwn03MjoSgnU15IKPloo-aS-2mCHtc"/>
+                        </div>
+                        <div class="gallery-body">
+                            <h3>Logic Link</h3>
+                            <p>Build complex pathways of deductive reasoning.</p>
+                            <div class="gallery-meta">
+                                <span class="gallery-tag tag-medium">MEDIUM</span>
+                                <button class="gallery-play-btn btn-play" data-game="rule-shifter">Play</button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="gallery-card" data-game="rapid-sort" data-category="speed" id="game-card-rapid-sort">
+                        <div class="gallery-media">
+                            <img alt="Fast-paced pixel graphics showing a small running creature against a colorful sunset background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfV8-j2Sg3Gu7u_qqpGEhJIPNFrBcsR-dMmhNL-oweH_F0v3EdTGVhSH8g3fXgHOpZFHymKWgT1qxYhzFiY6oYcONhsOz95tU6P_C5A8mh2O9Vl1bZyz7Gplg5wlqlVmvxfSW7G8K3prBw27pCmiX4AJlhxb9L4s0aGrteW_iKfIi2_sDL2BecE5nPk-X-k4IGTjG6jssdoMofAvhpvUYXvOnJALm6JiIR7Uq7s0FYILiMhQS83ienL18x9jqirfR39Yro5jHuOIc"/>
+                        </div>
+                        <div class="gallery-body">
+                            <h3>Speed Sprinter</h3>
+                            <p>Sharpen reaction times and mental agility.</p>
+                            <div class="gallery-meta">
+                                <span class="gallery-tag tag-hard">HARD</span>
+                                <button class="gallery-play-btn btn-play" data-game="rapid-sort">Play</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </section>
 
-                <div class="game-card" data-game="digit-juggler" id="game-card-digit-juggler">
-                    <div class="game-card-badge">Memory</div>
-                    <div class="game-card-icon">🔢</div>
-                    <h3>Digit Juggler</h3>
-                    <p>Remember N digits back — classic n-back challenge</p>
-                    <div class="game-card-stats">
-                        <span class="stat">Best: <strong>—</strong></span>
-                        <span class="stat">Played: <strong>0</strong></span>
-                    </div>
-                    <button class="btn btn-primary btn-play" data-game="digit-juggler">Play Now</button>
+        <!-- ─── Auth View ──────────────────────────────── -->
+        <section id="view-auth" class="view">
+            <section class="auth-section">
+                <div class="auth-layout">
+                    <article class="auth-story-card">
+                        <div id="auth-star-grid" class="auth-star-grid" aria-hidden="true"></div>
+                        <div class="hero-chip">Google Account Access</div>
+                        <h2>One identity. <span>Zero passwords.</span></h2>
+                        <p class="auth-story-copy">Use Google to sign in to Cerebro. If this is your first visit, your account is created automatically with the same action.</p>
+                        <div class="auth-benefit-grid">
+                            <div class="auth-benefit-card">
+                                <span class="material-symbols-outlined">neurology</span>
+                                <strong>Training history stays linked</strong>
+                                <p>Your sessions, scores, and future progress remain attached to one verified identity.</p>
+                            </div>
+                            <div class="auth-benefit-card">
+                                <span class="material-symbols-outlined">verified_user</span>
+                                <strong>Verified access only</strong>
+                                <p>Google handles both sign-in and account creation, so there is no separate password flow to manage.</p>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="auth-panel-card">
+                        <span class="gallery-kicker">ACCESS NODE</span>
+                        <h3>Continue with Google</h3>
+                        <p class="auth-panel-copy">Choose the Google account you want to use for Cerebro.</p>
+                        <div id="auth-notice" class="auth-notice hidden"></div>
+                        <div id="auth-google-shell" class="auth-google-shell">
+                            <button id="google-signin-trigger" class="google-trigger-btn" type="button">
+                                <span class="google-trigger-mark" aria-hidden="true">G</span>
+                                <span class="google-trigger-copy">
+                                    <strong>Continue with Google</strong>
+                                    <span>Sign in or create your account</span>
+                                </span>
+                            </button>
+                            <div id="google-signin-button" class="google-signin-button"></div>
+                        </div>
+                        <p id="auth-config-message" class="auth-config-message hidden">Google Sign-In is not configured yet for this environment.</p>
+                        <button id="auth-back-btn" class="btn btn-ghost" type="button" data-view-target="dashboard">Back to Landing Page</button>
+                    </article>
                 </div>
-
-                <div class="game-card" data-game="signal-hunter" id="game-card-signal-hunter">
-                    <div class="game-card-badge">Attention</div>
-                    <div class="game-card-icon">🎯</div>
-                    <h3>Signal Hunter</h3>
-                    <p>Find target symbols among visually similar distractors</p>
-                    <div class="game-card-stats">
-                        <span class="stat">Best: <strong>—</strong></span>
-                        <span class="stat">Played: <strong>0</strong></span>
-                    </div>
-                    <button class="btn btn-primary btn-play" data-game="signal-hunter">Play Now</button>
-                </div>
-
-                <div class="game-card" data-game="rule-shifter" id="game-card-rule-shifter">
-                    <div class="game-card-badge">Logic</div>
-                    <div class="game-card-icon">🔄</div>
-                    <h3>Rule Shifter</h3>
-                    <p>Sort cards by a rule that silently changes — adapt fast</p>
-                    <div class="game-card-stats">
-                        <span class="stat">Best: <strong>—</strong></span>
-                        <span class="stat">Played: <strong>0</strong></span>
-                    </div>
-                    <button class="btn btn-primary btn-play" data-game="rule-shifter">Play Now</button>
-                </div>
-
-                <div class="game-card" data-game="mirror-maze" id="game-card-mirror-maze">
-                    <div class="game-card-badge">Logic</div>
-                    <div class="game-card-icon">🪞</div>
-                    <h3>Mirror Maze</h3>
-                    <p>Predict where a ball exits after bouncing off mirrors</p>
-                    <div class="game-card-stats">
-                        <span class="stat">Best: <strong>—</strong></span>
-                        <span class="stat">Played: <strong>0</strong></span>
-                    </div>
-                    <button class="btn btn-primary btn-play" data-game="mirror-maze">Play Now</button>
-                </div>
-
-                <div class="game-card" data-game="impulse-guard" id="game-card-impulse-guard">
-                    <div class="game-card-badge">Attention</div>
-                    <div class="game-card-icon">🛡️</div>
-                    <h3>Impulse Guard</h3>
-                    <p>Tap every shape — except the forbidden one</p>
-                    <div class="game-card-stats">
-                        <span class="stat">Best: <strong>—</strong></span>
-                        <span class="stat">Played: <strong>0</strong></span>
-                    </div>
-                    <button class="btn btn-primary btn-play" data-game="impulse-guard">Play Now</button>
-                </div>
-
-                <div class="game-card" data-game="rapid-sort" id="game-card-rapid-sort">
-                    <div class="game-card-badge">Speed</div>
-                    <div class="game-card-icon">⚡</div>
-                    <h3>Rapid Sort</h3>
-                    <p>Classify items into categories at maximum speed</p>
-                    <div class="game-card-stats">
-                        <span class="stat">Best: <strong>—</strong></span>
-                        <span class="stat">Played: <strong>0</strong></span>
-                    </div>
-                    <button class="btn btn-primary btn-play" data-game="rapid-sort">Play Now</button>
-                </div>
-            </div>
+            </section>
         </section>
 
         <!-- ─── Game Container ─────────────────────────── -->
@@ -220,14 +295,14 @@
                     <div class="start-content">
                         <div class="start-icon">🔮</div>
                         <h2>Pattern Recall</h2>
-                        <p>Memorize the flashing tiles and replay them in order</p>
+                        <p>Memorize the flashing tiles and replay them in order to practice visual recall.</p>
                         <ul class="rules-list">
                             <li>Watch the tiles light up</li>
                             <li>Tap them back in the same order</li>
                             <li>Each round adds one more tile</li>
-                            <li>Faster responses earn bonus points</li>
+                            <li>Stay accurate and keep a steady rhythm</li>
                         </ul>
-                        <button id="btn-start-game" class="btn btn-primary btn-lg">Start Game</button>
+                        <button id="btn-start-game" class="btn btn-primary btn-lg">Try Cerebro</button>
                     </div>
                 </div>
             </div>
@@ -240,38 +315,62 @@
 
         <!-- ─── Leaderboard View ───────────────────────── -->
         <section id="view-leaderboard" class="view">
-            <h2>Leaderboard</h2>
-            <div class="leaderboard-filters">
-                <select id="leaderboard-game-select" class="select">
-                    <option value="pattern-recall">Pattern Recall</option>
-                    <option value="digit-juggler">Digit Juggler</option>
-                    <option value="signal-hunter">Signal Hunter</option>
-                    <option value="rule-shifter">Rule Shifter</option>
-                    <option value="mirror-maze">Mirror Maze</option>
-                    <option value="impulse-guard">Impulse Guard</option>
-                    <option value="rapid-sort">Rapid Sort</option>
-                </select>
-            </div>
-            <div id="leaderboard-table-container">
-                <table class="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Player</th>
-                            <th>Score</th>
-                            <th>Level</th>
-                            <th>Date</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-body">
-                        <tr>
-                            <td colspan="5" class="empty-state">No scores yet. Be the first!</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <section class="leaderboard-section">
+                <div class="leaderboard-card">
+                    <div class="leaderboard-header">
+                        <span class="leaderboard-icon material-symbols-outlined">emoji_events</span>
+                        <div>
+                            <span class="gallery-kicker">METRICS FEED</span>
+                            <h2>Leaderboard</h2>
+                        </div>
+                    </div>
+                    <div class="leaderboard-toolbar">
+                        <label class="leaderboard-filter-label" for="leaderboard-game-select">Game</label>
+                        <select id="leaderboard-game-select" class="leaderboard-select">
+                            <option value="pattern-recall">Pattern Recall</option>
+                            <option value="digit-juggler">Digit Juggler</option>
+                            <option value="signal-hunter">Signal Hunter</option>
+                            <option value="rule-shifter">Rule Shifter</option>
+                            <option value="mirror-maze">Mirror Maze</option>
+                            <option value="impulse-guard">Impulse Guard</option>
+                            <option value="rapid-sort">Rapid Sort</option>
+                        </select>
+                    </div>
+                    <div class="leaderboard-table-wrap">
+                        <table class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Player</th>
+                                    <th>Score</th>
+                                    <th>Level</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboard-body">
+                                <tr>
+                                    <td colspan="5" class="empty-state">Loading leaderboard…</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="leaderboard-cta header-signin-btn" type="button">Join with Google</button>
+                </div>
+            </section>
         </section>
     </main>
+
+    <footer id="site-footer">
+        <div class="footer-brand">
+            <div class="footer-logo">Cerebro</div>
+            <p>© 2024 Cerebro. A cozy ritual for your mind.</p>
+        </div>
+        <div class="footer-links">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Contact</a>
+        </div>
+    </footer>
 
     <!-- ═══════════════════════════════════════════════════ -->
     <!-- MODALS                                              -->
@@ -281,7 +380,7 @@
     <div id="modal-gameover" class="modal-overlay hidden">
         <div class="modal">
             <div class="modal-header">
-                <h2 id="modal-title">Game Over</h2>
+                <h2 id="modal-title">Session Complete</h2>
             </div>
             <div class="modal-body">
                 <div class="result-score">
@@ -308,7 +407,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="btn-play-again" class="btn btn-primary">Play Again</button>
+                <button id="btn-play-again" class="btn btn-primary">Try Again</button>
                 <button id="btn-go-home" class="btn btn-ghost">Home</button>
             </div>
         </div>
@@ -319,8 +418,11 @@
     <!-- ═══════════════════════════════════════════════════ -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="js/utils/timer.js"></script>
     <script src="js/utils/api.js"></script>
+    <script src="js/hero-scene.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/games/pattern-recall.js"></script>
     <script src="js/games/digit-juggler.js"></script>
     <script src="js/games/signal-hunter.js"></script>

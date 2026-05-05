@@ -2,20 +2,17 @@
 /**
  * Cerebro — Score History
  * 
- * GET /api/scores/history?user_id=1&game=pattern-recall&limit=20
+ * GET /api/scores/history?game=pattern-recall&limit=20
  * 
- * Returns a user's score history for a game.
+ * Returns the authenticated user's score history for a game.
  */
 
 require_once __DIR__ . '/../middleware.php';
 
-$userId = sanitizeInt($_GET['user_id'] ?? 0);
+$user = requireAuthenticatedUser();
+$userId = (int) $user['id'];
 $gameSlug = sanitize($_GET['game'] ?? '');
 $limit = min(100, max(1, sanitizeInt($_GET['limit'] ?? 20)));
-
-if ($userId <= 0) {
-    jsonError('Missing or invalid "user_id" parameter.', 400);
-}
 
 // ── Build query ─────────────────────────────────────────
 $params = [$userId];
