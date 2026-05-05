@@ -311,7 +311,7 @@ var MirrorMaze = (function ($) {
         gameTimer.reset().start();
         buildUI();
 
-        CerebroAPI.post('/game/start', { game_slug: 'mirror-maze', user_id: 1 })
+        CerebroAPI.post('/game/start', { game_slug: 'mirror-maze' })
             .done(function (r) { sessionToken = r.token; }).fail(function () { });
         updateDisplay();
         runCountdown(function () { showPuzzle(); });

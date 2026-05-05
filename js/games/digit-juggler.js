@@ -325,7 +325,7 @@ var DigitJuggler = (function ($) {
         gameTimer.reset().start();
 
         // Request session token
-        CerebroAPI.post('/game/start', { game_slug: 'digit-juggler', user_id: 1 })
+        CerebroAPI.post('/game/start', { game_slug: 'digit-juggler' })
             .done(function (r) { sessionToken = r.token; })
             .fail(function () { /* offline mode */ });
 

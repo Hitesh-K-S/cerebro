@@ -3,7 +3,7 @@
  * Cerebro — Start Game Session
  * 
  * POST /api/game/start
- * Body: { "game_slug": "pattern-recall", "user_id": 1 }
+ * Body: { "game_slug": "pattern-recall" }
  * 
  * Creates a game session token for anti-cheat validation.
  */
@@ -13,10 +13,11 @@ require_once __DIR__ . '/../middleware.php';
 requirePost();
 
 $body = getJsonBody();
-requireFields($body, ['game_slug', 'user_id']);
+requireFields($body, ['game_slug']);
 
 $gameSlug = sanitize($body['game_slug']);
-$userId = sanitizeInt($body['user_id']);
+$user = requireAuthenticatedUser();
+$userId = (int) $user['id'];
 
 // ── Validate game exists ────────────────────────────────
 $game = Database::fetchOne(
@@ -26,16 +27,6 @@ $game = Database::fetchOne(
 
 if (!$game) {
     jsonError('Game not found or inactive.', 404);
-}
-
-// ── Validate user exists ────────────────────────────────
-$user = Database::fetchOne(
-    'SELECT id FROM users WHERE id = ?',
-    [$userId]
-);
-
-if (!$user) {
-    jsonError('User not found.', 404);
 }
 
 // ── Invalidate any existing uncompleted sessions ────────

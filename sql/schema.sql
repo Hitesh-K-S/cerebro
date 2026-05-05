@@ -13,15 +13,20 @@ USE cerebro;
 -- Users
 -- ------------------------------------------------------------
 CREATE TABLE users (
-    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    username    VARCHAR(32)  NOT NULL UNIQUE,
-    email       VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    username      VARCHAR(32)  NOT NULL UNIQUE,
+    email         VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NULL,
+    auth_provider VARCHAR(32)  NOT NULL DEFAULT 'google',
+    google_sub    VARCHAR(255) NULL UNIQUE,
+    display_name  VARCHAR(255) NULL,
+    avatar_url    TEXT NULL,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     INDEX idx_username (username),
-    INDEX idx_email (email)
+    INDEX idx_email (email),
+    INDEX idx_google_sub (google_sub)
 ) ENGINE=InnoDB;
 
 -- ------------------------------------------------------------

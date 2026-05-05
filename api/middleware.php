@@ -89,6 +89,39 @@ function sanitizeInt($input): int
     return max(0, (int) $input);
 }
 
+// ── Authentication ───────────────────────────────────────
+
+/**
+ * Return the authenticated user from the current PHP session.
+ */
+function getAuthenticatedUser(): ?array
+{
+    $userId = sanitizeInt($_SESSION['user_id'] ?? 0);
+    if ($userId <= 0) {
+        return null;
+    }
+
+    return Database::fetchOne(
+        'SELECT id, username, email, display_name, avatar_url, auth_provider
+         FROM users
+         WHERE id = ?',
+        [$userId]
+    );
+}
+
+/**
+ * Require an authenticated user or return 401.
+ */
+function requireAuthenticatedUser(): array
+{
+    $user = getAuthenticatedUser();
+    if (!$user) {
+        jsonError('Authentication required.', 401);
+    }
+
+    return $user;
+}
+
 // ── Session Token Validation ─────────────────────────────
 
 /**

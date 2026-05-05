@@ -261,7 +261,7 @@ var RuleShifter = (function ($) {
         buildUI();
         renderBins();
 
-        CerebroAPI.post('/game/start', { game_slug: 'rule-shifter', user_id: 1 })
+        CerebroAPI.post('/game/start', { game_slug: 'rule-shifter' })
             .done(function (r) { sessionToken = r.token; }).fail(function () { });
 
         updateDisplay();

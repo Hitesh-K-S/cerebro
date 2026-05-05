@@ -1,6 +1,6 @@
 /**
  * Cerebro — Application Bootstrap
- * 
+ *
  * SPA view routing, navigation, game registry, and global state management.
  */
 
@@ -8,7 +8,6 @@
 
 var CerebroApp = (function ($) {
 
-    // ── Game Registry ────────────────────────────────────
     var GAMES = {
         'pattern-recall': { module: function () { return PatternRecall; }, name: 'Pattern Recall', icon: '🔮', category: 'memory' },
         'digit-juggler': { module: function () { return DigitJuggler; }, name: 'Digit Juggler', icon: '🔢', category: 'memory' },
@@ -19,12 +18,11 @@ var CerebroApp = (function ($) {
         'rapid-sort': { module: function () { return RapidSort; }, name: 'Rapid Sort', icon: '⚡', category: 'speed' }
     };
 
-    // ── State ────────────────────────────────────────────
     var currentView = 'dashboard';
     var currentGame = null;
     var activeGameModule = null;
-
-    // ── View Management ──────────────────────────────────
+    var activeCategoryFilter = 'all';
+    var pendingGameLaunch = null;
 
     function showView(viewId) {
         $('.view').removeClass('active');
@@ -36,49 +34,62 @@ var CerebroApp = (function ($) {
     }
 
     function onViewEnter(viewId) {
-        switch (viewId) {
-            case 'leaderboard':
-                loadLeaderboard();
-                break;
-            case 'game':
-                if (activeGameModule) {
-                    activeGameModule.init();
-                }
-                break;
+        if (viewId === 'leaderboard') {
+            loadLeaderboard();
+        }
+
+        if (viewId === 'auth' && window.CerebroHero && CerebroHero.refresh) {
+            CerebroHero.refresh();
+        }
+
+        if (viewId === 'game' && activeGameModule) {
+            activeGameModule.init();
         }
     }
-
-    // ── Navigation Binding ───────────────────────────────
 
     function bindNavigation() {
         $(document).on('click', '.nav-btn', function () {
             var viewId = $(this).data('view');
-            if (viewId) {
-                if (currentView === 'game' && viewId !== 'game') {
-                    cleanupCurrentGame();
-                }
-                showView(viewId);
+            if (!viewId) {
+                return;
             }
+
+            if (currentView === 'game' && viewId !== 'game') {
+                cleanupCurrentGame();
+            }
+
+            showView(viewId);
         });
 
-        // Game card play button
         $(document).on('click', '.btn-play', function () {
-            var gameSlug = $(this).data('game');
-            launchGame(gameSlug);
+            launchGame($(this).data('game'));
         });
 
-        // Category cards → navigate to games view
         $(document).on('click', '.category-card', function () {
+            var category = $(this).data('category') || 'all';
+            setCategoryFilter(category);
             showView('games');
         });
 
-        // Back button
+        $(document).on('click', '.filter-chip', function () {
+            setCategoryFilter($(this).data('category-filter') || 'all');
+        });
+
+        $(document).on('click', '[data-view-target]', function () {
+            var targetView = $(this).data('view-target');
+            if (targetView) {
+                if (currentView === 'game' && targetView !== 'game') {
+                    cleanupCurrentGame();
+                }
+                showView(targetView);
+            }
+        });
+
         $(document).on('click', '#btn-back', function () {
             cleanupCurrentGame();
             showView('games');
         });
 
-        // Game-over modal buttons
         $(document).on('click', '#btn-play-again', function () {
             $('#modal-gameover').addClass('hidden');
             if (activeGameModule) {
@@ -91,54 +102,69 @@ var CerebroApp = (function ($) {
             cleanupCurrentGame();
             showView('games');
         });
+
+        $(document).on('click', '.leaderboard-cta', function () {
+            if (window.CerebroAuth && !CerebroAuth.isAuthenticated()) {
+                CerebroAuth.openAuth('Sign in with Google to appear on the leaderboard.');
+            }
+        });
+
+        $(document).on('cerebro:auth-success', function () {
+            if (pendingGameLaunch) {
+                var gameSlug = pendingGameLaunch;
+                pendingGameLaunch = null;
+                launchGame(gameSlug, { skipAuthCheck: true });
+            }
+        });
     }
 
-    // ── Game Launch ──────────────────────────────────────
+    function launchGame(gameSlug, options) {
+        options = options || {};
 
-    function launchGame(gameSlug) {
         if (!GAMES[gameSlug]) {
             console.warn('[Cerebro] Unknown game:', gameSlug);
             return;
         }
 
+        if (!options.skipAuthCheck && window.CerebroAuth && !CerebroAuth.isAuthenticated()) {
+            pendingGameLaunch = gameSlug;
+            CerebroAuth.openAuth('Sign in with Google to start ' + GAMES[gameSlug].name + '.');
+            return;
+        }
+
         currentGame = gameSlug;
-        var reg = GAMES[gameSlug];
-        activeGameModule = reg.module();
+        activeGameModule = GAMES[gameSlug].module();
 
-        // Update game view header
-        $('#game-title').text(reg.name);
-
-        // Update start screen for the game
-        updateStartScreen(gameSlug, reg);
-
+        $('#game-title').text(GAMES[gameSlug].name);
+        updateStartScreen(gameSlug, GAMES[gameSlug]);
         showView('game');
     }
 
     function updateStartScreen(slug, reg) {
         var $start = $('#game-start-screen');
         var descriptions = {
-            'pattern-recall': { desc: 'Memorize the flashing tiles and replay them in order', rules: ['Watch the tiles light up', 'Tap them back in the same order', 'Each round adds one more tile', 'Faster responses earn bonus points'] },
-            'digit-juggler': { desc: 'Remember the digit shown N positions ago', rules: ['Digits appear one at a time', 'Press Match if current digit = N digits back', 'Press No Match otherwise', 'Accuracy earns more than guessing'] },
-            'signal-hunter': { desc: 'Find all target symbols hidden among distractors', rules: ['A target symbol is shown before each round', 'Tap every instance in the field', 'Avoid tapping distractors', 'Speed + accuracy = higher score'] },
-            'rule-shifter': { desc: 'Sort cards into bins — but the sorting rule changes silently', rules: ['Cards have color, shape, and count', 'Sort by the unknown active rule', 'The rule changes after correct streaks', 'Adapt quickly after each shift'] },
-            'mirror-maze': { desc: 'Predict where a ball exits after bouncing off mirrors', rules: ['Mentally trace the ball path through mirrors', 'Select the correct exit edge cell', 'Click Confirm to submit your answer', 'More mirrors = harder puzzles'] },
-            'impulse-guard': { desc: 'Tap every shape EXCEPT the forbidden one', rules: ['Shapes flash rapidly one at a time', 'Tap on Go shapes as fast as possible', 'Do NOT tap the forbidden shape', 'The forbidden shape may change mid-game'] },
-            'rapid-sort': { desc: 'Classify words into two categories as fast as possible', rules: ['A word appears — choose left or right', 'Use arrow keys or click buttons', 'Categories change between rounds', 'Speed and accuracy both matter'] }
+            'pattern-recall': { desc: 'A memory exercise that helps you retain and replay visual sequences.', rules: ['Watch the pattern carefully', 'Replay the full sequence in order', 'Each round adds one more step', 'Stay accurate and keep a steady pace'] },
+            'digit-juggler': { desc: 'An active-memory exercise built around tracking what appeared a few steps earlier.', rules: ['Digits appear one at a time', 'Compare the current digit with the one N steps back', 'Respond once you are confident', 'Steady accuracy matters more than rushing'] },
+            'signal-hunter': { desc: 'A focus exercise for spotting targets while ignoring visual distractions.', rules: ['Find the target signal for the round', 'Select every valid target you see', 'Ignore close-looking distractors', 'Careful attention improves your score'] },
+            'rule-shifter': { desc: 'A logic exercise that helps you adapt when hidden rules change.', rules: ['Sort using the active hidden rule', 'Use feedback to infer the pattern', 'Expect the rule to shift during the session', 'Adjust quickly as new information appears'] },
+            'mirror-maze': { desc: 'A spatial-reasoning exercise for mentally tracing paths and predicting outcomes.', rules: ['Trace the path through each mirror', 'Predict the correct exit', 'Choose once your answer feels clear', 'Later rounds add more complexity'] },
+            'impulse-guard': { desc: 'A response-control exercise focused on attention and restraint.', rules: ['React quickly to valid shapes', 'Pause when the forbidden shape appears', 'Watch for shifting forbidden cues', 'Control and timing both matter'] },
+            'rapid-sort': { desc: 'A speed exercise for sorting signals quickly without losing accuracy.', rules: ['Sort each signal left or right', 'Follow the current category rule', 'Move quickly while staying accurate', 'Consistency builds stronger results'] }
         };
 
         var info = descriptions[slug] || { desc: '', rules: [] };
         $start.find('.start-icon').text(reg.icon);
         $start.find('h2').text(reg.name);
         $start.find('p').first().text(info.desc);
-        var $ul = $start.find('.rules-list');
-        $ul.empty();
+
+        var $rules = $start.find('.rules-list');
+        $rules.empty();
         info.rules.forEach(function (rule) {
-            $ul.append('<li>' + rule + '</li>');
+            $rules.append('<li>' + rule + '</li>');
         });
 
         $start.removeClass('hidden');
 
-        // Wire the start button for this game
         $('#btn-start-game').off('click').on('click', function () {
             $start.addClass('hidden');
             if (activeGameModule && activeGameModule.startGame) {
@@ -147,24 +173,36 @@ var CerebroApp = (function ($) {
         });
     }
 
+    function setCategoryFilter(category) {
+        activeCategoryFilter = category || 'all';
+
+        $('.filter-chip').removeClass('active');
+        $('.filter-chip[data-category-filter="' + activeCategoryFilter + '"]').addClass('active');
+        $('.category-card').removeClass('active');
+        $('.category-card[data-category="' + activeCategoryFilter + '"]').addClass('active');
+
+        $('.gallery-card').each(function () {
+            var matches = activeCategoryFilter === 'all' || $(this).data('category') === activeCategoryFilter;
+            $(this).toggleClass('is-hidden', !matches);
+        });
+    }
+
     function cleanupCurrentGame() {
         if (activeGameModule && activeGameModule.cleanup) {
             activeGameModule.cleanup();
         }
+
         activeGameModule = null;
         currentGame = null;
-        // Reset lives display
         $('#display-lives').html('<span class="heart">♥</span><span class="heart">♥</span><span class="heart">♥</span>');
     }
-
-    // ── Leaderboard ──────────────────────────────────────
 
     function loadLeaderboard() {
         var gameSlug = $('#leaderboard-game-select').val() || 'pattern-recall';
 
         CerebroAPI.get('/scores/leaderboard', { game: gameSlug, limit: 20 })
             .done(function (response) {
-                renderLeaderboard(response.scores);
+                renderLeaderboard(response.scores || []);
             })
             .fail(function () {
                 renderLeaderboard([]);
@@ -173,24 +211,26 @@ var CerebroApp = (function ($) {
 
     function renderLeaderboard(scores) {
         var $body = $('#leaderboard-body');
+        if ($body.length === 0) {
+            return;
+        }
 
-        if (!scores || scores.length === 0) {
+        if (!scores.length) {
             $body.html('<tr><td colspan="5" class="empty-state">No scores yet. Be the first!</td></tr>');
             return;
         }
 
         var html = '';
         scores.forEach(function (entry) {
-            var date = new Date(entry.created_at);
-            var dateStr = date.toLocaleDateString();
-            var rankIcon = entry.rank <= 3 ? ['🥇', '🥈', '🥉'][entry.rank - 1] : '#' + entry.rank;
+            var dateStr = new Date(entry.created_at).toLocaleDateString();
+            var rankLabel = entry.rank <= 3 ? ['🥇', '🥈', '🥉'][entry.rank - 1] : '#' + entry.rank;
 
             html += '<tr>';
-            html += '<td>' + rankIcon + '</td>';
+            html += '<td>' + rankLabel + '</td>';
             html += '<td>' + escapeHtml(entry.username) + '</td>';
-            html += '<td><strong>' + entry.score.toLocaleString() + '</strong></td>';
-            html += '<td>' + entry.level_reached + '</td>';
-            html += '<td>' + dateStr + '</td>';
+            html += '<td><strong>' + Number(entry.score || 0).toLocaleString() + '</strong></td>';
+            html += '<td>' + escapeHtml(String(entry.level_reached)) + '</td>';
+            html += '<td>' + escapeHtml(dateStr) + '</td>';
             html += '</tr>';
         });
 
@@ -203,19 +243,16 @@ var CerebroApp = (function ($) {
         });
     }
 
-    // ── Utilities ────────────────────────────────────────
-
     function escapeHtml(str) {
         var div = document.createElement('div');
         div.appendChild(document.createTextNode(str));
         return div.innerHTML;
     }
 
-    // ── Initialization ───────────────────────────────────
-
     function init() {
         bindNavigation();
         bindLeaderboard();
+        setCategoryFilter('all');
         showView('dashboard');
 
         if (CerebroAPI.getQueueCount() > 0) {
@@ -225,12 +262,10 @@ var CerebroApp = (function ($) {
         console.log('[Cerebro] App initialized — ' + Object.keys(GAMES).length + ' games registered');
     }
 
-    // ── Boot ─────────────────────────────────────────────
     $(document).ready(function () {
         init();
     });
 
-    // ── Public API ───────────────────────────────────────
     return {
         showView: showView,
         launchGame: launchGame,
