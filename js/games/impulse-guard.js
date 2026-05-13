@@ -89,7 +89,7 @@ var ImpulseGuard = (function ($) {
     function buildUI() {
         var $c = $('#ig-container');
         if ($c.length === 0) { $c = $('<div id="ig-container"></div>').appendTo('#game-area'); }
-        $('#pattern-grid').hide(); $('#game-start-screen').addClass('hidden');
+        $('#game-board').hide(); $('#game-start-screen').addClass('hidden');
 
         $c.html(
             '<div class="ig-instruction">Tap <em>every shape</em> — except the forbidden one!</div>' +
@@ -192,6 +192,7 @@ var ImpulseGuard = (function ($) {
             commissionErrors++;
             score -= 150;
             $area.addClass('commission-error');
+            if (window.CerebroSound) CerebroSound.wrong();
             markDot(currentIndex, 'commission-error');
         } else {
             // Correct go
@@ -199,6 +200,7 @@ var ImpulseGuard = (function ($) {
             var speedBonus = Math.max(0.3, 1.0 - (reactionMs / diff.displayMs));
             score += Math.round(80 * speedBonus);
             $area.addClass('go-correct');
+            if (window.CerebroSound) CerebroSound.correct();
             markDot(currentIndex, 'go-correct');
         }
 
@@ -219,12 +221,14 @@ var ImpulseGuard = (function ($) {
             nogoCorrect++;
             score += 120;
             $area.addClass('nogo-correct');
+            if (window.CerebroSound) CerebroSound.correct();
             markDot(currentIndex, 'nogo-correct');
         } else {
             // Omission error — missed a go stimulus
             goMissed++;
             score -= 20;
             $area.addClass('omission-error');
+            if (window.CerebroSound) CerebroSound.wrong();
             markDot(currentIndex, 'omission-error');
         }
 
@@ -303,15 +307,36 @@ var ImpulseGuard = (function ($) {
         // Bonus for low commission errors
         score += Math.max(0, 500 - (commissionErrors * 100));
         score = Math.max(0, score);
+        var total = stimuli.length;
+        var acc = total > 0 ? Math.round((goCorrect + nogoCorrect) / total * 100) : 0;
 
-        $('#result-score').text(score);
         $('#result-level').text(level);
         $('#result-rounds').text(commissionErrors + ' false taps');
         $('#result-time').text(gameTimer.getFormatted());
-        var title = commissionErrors === 0 ? 'Perfect Control! 🛡️' :
-            commissionErrors <= 2 ? 'Strong Willpower! 💪' : 'Keep Practicing! ⚡';
+        $('#result-accuracy').text(acc + '%');
+        var title = commissionErrors === 0 ? 'Perfect Control' :
+            commissionErrors <= 2 ? 'Strong Willpower' : 'Keep Practicing';
         $('#modal-title').text(title);
         $('#result-badge').addClass('hidden');
+        if (window.CerebroSound) CerebroSound.complete();
+        if (window.CerebroApp && CerebroApp.animateScore) {
+            CerebroApp.animateScore(score);
+        } else {
+            $('#result-score').text(score);
+        }
+        if (window.CerebroApp && CerebroApp.setTierBadge) {
+            CerebroApp.setTierBadge(score);
+        }
+        if (window.CerebroApp && CerebroApp.updatePerformanceMeters) {
+            CerebroApp.updatePerformanceMeters({
+                accuracy: acc,
+                reaction: 0,
+                streak: goCorrect
+            });
+        }
+        if (score > 2000 && window.CerebroApp && CerebroApp.spawnConfetti) {
+            CerebroApp.spawnConfetti();
+        }
         $('#modal-gameover').removeClass('hidden');
 
         if (sessionToken) {
@@ -348,9 +373,9 @@ var ImpulseGuard = (function ($) {
     }
 
     function updateDisplay() {
-        $('#display-level').text('Level ' + level);
+        $('#display-level').text('Lv.' + level);
         $('#display-round').text((currentIndex + 1) + '/' + stimuli.length);
-        $('#display-score').text('Score: ' + score);
+        $('#display-score').text(score);
     }
 
     function bindEvents() {
@@ -370,7 +395,7 @@ var ImpulseGuard = (function ($) {
     function cleanup() {
         clearTimeout(stimulusTimeout);
         $(document).off('.impulseguard');
-        $('#ig-container').remove(); $('#pattern-grid').show();
+        $('#ig-container').remove();
         state = STATES.INIT;
     }
 

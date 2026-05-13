@@ -138,7 +138,7 @@ var RapidSort = (function ($) {
     function buildUI() {
         var $c = $('#rp-container');
         if ($c.length === 0) { $c = $('<div id="rp-container"></div>').appendTo('#game-area'); }
-        $('#pattern-grid').hide(); $('#game-start-screen').addClass('hidden');
+        $('#game-board').hide(); $('#game-start-screen').addClass('hidden');
 
         $c.html(
             '<div class="rp-round-banner" id="rp-banner">' +
@@ -230,12 +230,14 @@ var RapidSort = (function ($) {
             var timeBonus = Math.pow(Math.max(0.2, 1.0 - (reactionMs / diff.displayMs)), 1.5);
             score += Math.round(100 * timeBonus);
             $btn.addClass('flash-correct');
+            if (window.CerebroSound) CerebroSound.correct();
             $('#rp-word').addClass('correct');
         } else {
             roundWrong++;
             totalWrong++;
             score -= 50;
             $btn.addClass('flash-wrong');
+            if (window.CerebroSound) CerebroSound.wrong();
             $('#rp-word').addClass('wrong');
         }
 
@@ -335,15 +337,35 @@ var RapidSort = (function ($) {
         var throughput = (totalCorrect / (gameTimer.getElapsedMs() / 1000)).toFixed(2);
 
         score += Math.round(parseFloat(throughput) * 50);
+        var acc = totalItems > 0 ? Math.round(totalCorrect / totalItems * 100) : 0;
 
-        $('#result-score').text(score);
         $('#result-level').text(level);
         $('#result-rounds').text(totalCorrect + '/' + totalItems + ' correct');
         $('#result-time').text(throughput + ' items/sec');
-        var title = parseFloat(throughput) > 1.5 ? 'Lightning Fast! ⚡' :
-            parseFloat(throughput) > 1.0 ? 'Quick Thinker! 🚀' : 'Keep Practicing! 🏃';
+        $('#result-accuracy').text(acc + '%');
+        var title = parseFloat(throughput) > 1.5 ? 'Lightning Fast' :
+            parseFloat(throughput) > 1.0 ? 'Quick Thinker' : 'Keep Practicing';
         $('#modal-title').text(title);
         $('#result-badge').addClass('hidden');
+        if (window.CerebroSound) CerebroSound.complete();
+        if (window.CerebroApp && CerebroApp.animateScore) {
+            CerebroApp.animateScore(score);
+        } else {
+            $('#result-score').text(score);
+        }
+        if (window.CerebroApp && CerebroApp.setTierBadge) {
+            CerebroApp.setTierBadge(score);
+        }
+        if (window.CerebroApp && CerebroApp.updatePerformanceMeters) {
+            CerebroApp.updatePerformanceMeters({
+                accuracy: acc,
+                reaction: Math.round(1000 / parseFloat(throughput)),
+                streak: 0
+            });
+        }
+        if (score > 2000 && window.CerebroApp && CerebroApp.spawnConfetti) {
+            CerebroApp.spawnConfetti();
+        }
         $('#modal-gameover').removeClass('hidden');
 
         if (sessionToken) {
@@ -378,9 +400,9 @@ var RapidSort = (function ($) {
     }
 
     function updateDisplay() {
-        $('#display-level').text('Level ' + level);
-        $('#display-round').text('Round ' + (currentRound + 1) + '/' + totalRounds);
-        $('#display-score').text('Score: ' + score);
+        $('#display-level').text('Lv.' + level);
+        $('#display-round').text('R' + (currentRound + 1) + '/' + totalRounds);
+        $('#display-score').text(score);
     }
 
     function bindEvents() {
@@ -400,7 +422,7 @@ var RapidSort = (function ($) {
     function cleanup() {
         clearTimeout(itemTimeout);
         $(document).off('.rapidsort');
-        $('#rp-container').remove(); $('#pattern-grid').show();
+        $('#rp-container').remove();
         state = STATES.INIT;
     }
 

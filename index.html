@@ -20,6 +20,7 @@
     <!-- Styles -->
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/games-shared.css">
     <link rel="stylesheet" href="css/games/pattern-recall.css">
     <link rel="stylesheet" href="css/games/digit-juggler.css">
     <link rel="stylesheet" href="css/games/signal-hunter.css">
@@ -27,6 +28,9 @@
     <link rel="stylesheet" href="css/games/mirror-maze.css">
     <link rel="stylesheet" href="css/games/impulse-guard.css">
     <link rel="stylesheet" href="css/games/rapid-sort.css">
+    <link rel="stylesheet" href="css/games/word-grid.css">
+    <link rel="stylesheet" href="css/games/flanker-task.css">
+    <link rel="stylesheet" href="css/games/syllogisms.css">
 </head>
 
 <body>
@@ -43,6 +47,7 @@
                 <button class="nav-btn active" data-view="dashboard">Training</button>
                 <button class="nav-btn" data-view="games">Archive</button>
                 <button class="nav-btn" data-view="leaderboard">Metrics</button>
+                <button class="nav-btn" data-view="stats">Stats</button>
             </nav>
             <div class="user-info" id="user-session-controls">
                 <button class="header-signin-btn" type="button">Sign In</button>
@@ -110,106 +115,30 @@
                 <section class="gallery-section">
                     <div class="gallery-header">
                         <div>
-                            <span class="gallery-kicker">DAILY SELECTION</span>
-                            <h2>Games Gallery</h2>
+                            <span class="gallery-kicker">TRAINING DOMAINS</span>
+                            <h2>Cognitive Categories</h2>
                         </div>
-                        <button class="gallery-link-btn" data-view-target="games">View All Games</button>
+                        <button class="gallery-link-btn" data-view-target="games">Open Drill Catalog</button>
                     </div>
-                    <div class="gallery-grid">
-                        <article class="gallery-card" data-game="pattern-recall" data-category="memory">
-                            <div class="gallery-media">
-                                <img alt="Retro pixel art puzzle interface with colorful blocks and a cozy game character" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8b0o6Uu1PVnZ1yQ3I4UTarupV5gZCWWXBIckIA3hIxqZs8k5YQJH0OzY5HsQnh_a6lhA1JipjFWW7Simewq1r_Ta-RpykqZqURlePGIKz_wtZSdoM4JT7Ub9mqk2Z0KbaIZ4JEBcSEMQ1i2H8PF0oPxmeYsTni4GRAgFzt13wU3y6uGO9W-G6_ezdcoJ1lpasZ6IpIFnFRxPzl4ujh4KFqWQyZZ6OU5ppZ2dDiDbpS-DCKAQMTphEj7wB5fX6TvjSCCcHTLZxpXU"/>
-                            </div>
-                            <div class="gallery-body">
-                                <h3>Memory Matrix</h3>
-                                <p>Master spatial recognition and pattern recall.</p>
-                                <div class="gallery-meta">
-                                    <span class="gallery-tag tag-easy">EASY</span>
-                                    <button class="gallery-play-btn btn-play" data-game="pattern-recall">Play</button>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="gallery-card" data-game="rule-shifter" data-category="logic">
-                            <div class="gallery-media">
-                                <img alt="Digital representation of connected nodes in a pixel art style, light pastel blue and lavender colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKaKtlX7io2-mRnYFAJ03d7Wr1bT0hcv-S3wTRzPUiiIoNMaGUD62OmPqDehsgAEVBSYQAE-_q44DgVL_2RObf94uC4j9w-elmS08tsZZhXdZNzNmQB4UN42lQFdk5hyWPYsYQrlAGtUtPAR-qNK5Wp9r9MU4ZipIvkTwA9fPfWSuKQr07wCUYUIcZUubll5FP-2QdFIXm4uNGtpBMg4br3fygIb4ed_xXaGeOKHLly4cTDJwn03MjoSgnU15IKPloo-aS-2mCHtc"/>
-                            </div>
-                            <div class="gallery-body">
-                                <h3>Logic Link</h3>
-                                <p>Build complex pathways of deductive reasoning.</p>
-                                <div class="gallery-meta">
-                                    <span class="gallery-tag tag-medium">MEDIUM</span>
-                                    <button class="gallery-play-btn btn-play" data-game="rule-shifter">Play</button>
-                                </div>
-                            </div>
-                        </article>
-                        <article class="gallery-card" data-game="rapid-sort" data-category="speed">
-                            <div class="gallery-media">
-                                <img alt="Fast-paced pixel graphics showing a small running creature against a colorful sunset background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfV8-j2Sg3Gu7u_qqpGEhJIPNFrBcsR-dMmhNL-oweH_F0v3EdTGVhSH8g3fXgHOpZFHymKWgT1qxYhzFiY6oYcONhsOz95tU6P_C5A8mh2O9Vl1bZyz7Gplg5wlqlVmvxfSW7G8K3prBw27pCmiX4AJlhxb9L4s0aGrteW_iKfIi2_sDL2BecE5nPk-X-k4IGTjG6jssdoMofAvhpvUYXvOnJALm6JiIR7Uq7s0FYILiMhQS83ienL18x9jqirfR39Yro5jHuOIc"/>
-                            </div>
-                            <div class="gallery-body">
-                                <h3>Speed Sprinter</h3>
-                                <p>Sharpen reaction times and mental agility.</p>
-                                <div class="gallery-meta">
-                                    <span class="gallery-tag tag-hard">HARD</span>
-                                    <button class="gallery-play-btn btn-play" data-game="rapid-sort">Play</button>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
+                    <div id="landing-category-strip" class="category-strip"></div>
                 </section>
             </div>
         </section>
 
         <!-- ─── Games View ─────────────────────────────── -->
         <section id="view-games" class="view">
-            <section class="gallery-section">
-                <div class="gallery-header">
-                    <div>
-                        <span class="gallery-kicker">DAILY SELECTION</span>
-                        <h2>Games Gallery</h2>
+            <section class="games-catalog-section">
+                <div class="games-header">
+                    <div class="games-header-panel">
+                        <span class="gallery-kicker">DRILL CATALOG</span>
+                        <h2>Cognitive Drills</h2>
                     </div>
-                    <button class="gallery-link-btn" data-view-target="leaderboard">View All Games</button>
+                    <p class="games-header-copy">Browse every training drill by category. Each drill shows the skill it strengthens, expected intensity, and a typical session length before you launch.</p>
                 </div>
-                <div class="gallery-grid">
-                    <article class="gallery-card" data-game="pattern-recall" data-category="memory" id="game-card-pattern-recall">
-                        <div class="gallery-media">
-                            <img alt="Retro pixel art puzzle interface with colorful blocks and a cozy game character" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8b0o6Uu1PVnZ1yQ3I4UTarupV5gZCWWXBIckIA3hIxqZs8k5YQJH0OzY5HsQnh_a6lhA1JipjFWW7Simewq1r_Ta-RpykqZqURlePGIKz_wtZSdoM4JT7Ub9mqk2Z0KbaIZ4JEBcSEMQ1i2H8PF0oPxmeYsTni4GRAgFzt13wU3y6uGO9W-G6_ezdcoJ1lpasZ6IpIFnFRxPzl4ujh4KFqWQyZZ6OU5ppZ2dDiDbpS-DCKAQMTphEj7wB5fX6TvjSCCcHTLZxpXU"/>
-                        </div>
-                        <div class="gallery-body">
-                            <h3>Memory Matrix</h3>
-                            <p>Master spatial recognition and pattern recall.</p>
-                            <div class="gallery-meta">
-                                <span class="gallery-tag tag-easy">EASY</span>
-                                <button class="gallery-play-btn btn-play" data-game="pattern-recall">Play</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="gallery-card" data-game="rule-shifter" data-category="logic" id="game-card-rule-shifter">
-                        <div class="gallery-media">
-                            <img alt="Digital representation of connected nodes in a pixel art style, light pastel blue and lavender colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKaKtlX7io2-mRnYFAJ03d7Wr1bT0hcv-S3wTRzPUiiIoNMaGUD62OmPqDehsgAEVBSYQAE-_q44DgVL_2RObf94uC4j9w-elmS08tsZZhXdZNzNmQB4UN42lQFdk5hyWPYsYQrlAGtUtPAR-qNK5Wp9r9MU4ZipIvkTwA9fPfWSuKQr07wCUYUIcZUubll5FP-2QdFIXm4uNGtpBMg4br3fygIb4ed_xXaGeOKHLly4cTDJwn03MjoSgnU15IKPloo-aS-2mCHtc"/>
-                        </div>
-                        <div class="gallery-body">
-                            <h3>Logic Link</h3>
-                            <p>Build complex pathways of deductive reasoning.</p>
-                            <div class="gallery-meta">
-                                <span class="gallery-tag tag-medium">MEDIUM</span>
-                                <button class="gallery-play-btn btn-play" data-game="rule-shifter">Play</button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="gallery-card" data-game="rapid-sort" data-category="speed" id="game-card-rapid-sort">
-                        <div class="gallery-media">
-                            <img alt="Fast-paced pixel graphics showing a small running creature against a colorful sunset background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfV8-j2Sg3Gu7u_qqpGEhJIPNFrBcsR-dMmhNL-oweH_F0v3EdTGVhSH8g3fXgHOpZFHymKWgT1qxYhzFiY6oYcONhsOz95tU6P_C5A8mh2O9Vl1bZyz7Gplg5wlqlVmvxfSW7G8K3prBw27pCmiX4AJlhxb9L4s0aGrteW_iKfIi2_sDL2BecE5nPk-X-k4IGTjG6jssdoMofAvhpvUYXvOnJALm6JiIR7Uq7s0FYILiMhQS83ienL18x9jqirfR39Yro5jHuOIc"/>
-                        </div>
-                        <div class="gallery-body">
-                            <h3>Speed Sprinter</h3>
-                            <p>Sharpen reaction times and mental agility.</p>
-                            <div class="gallery-meta">
-                                <span class="gallery-tag tag-hard">HARD</span>
-                                <button class="gallery-play-btn btn-play" data-game="rapid-sort">Play</button>
-                            </div>
-                        </div>
-                    </article>
+                <div id="games-filter-bar" class="drill-filter-bar"></div>
+                <div id="games-category-sections" class="games-catalog-groups"></div>
+                <div class="games-catalog-footer">
+                    <button class="gallery-link-btn" data-view-target="leaderboard">View Leaderboard</button>
                 </div>
             </section>
         </section>
@@ -258,59 +187,129 @@
             </section>
         </section>
 
+        <!-- ─── Statistics ─────────────────────────────── -->
+        <section id="view-stats" class="view">
+            <div class="view-header">
+                <h2>Your Statistics</h2>
+                <p class="view-subtitle">Session history and performance across all drills.</p>
+            </div>
+            <div id="stats-content">
+                <div class="stats-grid">
+                    <div class="stat-card" id="stat-total-sessions">
+                        <div class="stat-card-label">Total Sessions</div>
+                        <div class="stat-card-value">—</div>
+                    </div>
+                    <div class="stat-card" id="stat-total-time">
+                        <div class="stat-card-label">Time Spent</div>
+                        <div class="stat-card-value">—</div>
+                    </div>
+                    <div class="stat-card" id="stat-avg-accuracy">
+                        <div class="stat-card-label">Avg Accuracy</div>
+                        <div class="stat-card-value">—</div>
+                    </div>
+                    <div class="stat-card" id="stat-best-tier">
+                        <div class="stat-card-label">Best Tier</div>
+                        <div class="stat-card-value">—</div>
+                    </div>
+                </div>
+                <div class="stats-section">
+                    <h3>Category Breakdown</h3>
+                    <div class="stats-category-grid" id="stats-categories"></div>
+                </div>
+                <div class="stats-section">
+                    <h3>Personal Bests</h3>
+                    <div class="stats-game-grid" id="stats-games"></div>
+                </div>
+            </div>
+        </section>
+
         <!-- ─── Game Container ─────────────────────────── -->
         <section id="view-game" class="view">
+            <!-- Game Header / HUD -->
             <div class="game-header">
-                <button id="btn-back" class="btn btn-ghost">← Back</button>
-                <div class="game-info">
-                    <h2 id="game-title">Pattern Recall</h2>
-                    <div class="game-meta">
-                        <span class="meta-item" id="display-level">Level 1</span>
-                        <span class="meta-item" id="display-round">Round 1</span>
-                        <span class="meta-item" id="display-score">Score: 0</span>
-                        <span class="meta-item" id="display-lives">
+                <div class="game-header-left">
+                    <button id="btn-back" class="btn btn-ghost btn-sm">← Back</button>
+                    <div class="game-header-title">
+                        <span class="game-header-category" id="game-category-label">Memory</span>
+                        <h2 id="game-title">Pattern Recall</h2>
+                    </div>
+                </div>
+                <div class="hud-bar" id="hud-bar">
+                    <span class="hud-badge hud-badge-level" id="display-level-badge">
+                        <span class="hud-icon">◈</span>
+                        <span class="hud-value" id="display-level">Lv.1</span>
+                    </span>
+                    <span class="hud-badge hud-badge-round" id="display-round-badge">
+                        <span class="hud-icon">◎</span>
+                        <span class="hud-value" id="display-round">R1</span>
+                    </span>
+                    <span class="hud-badge hud-badge-score" id="display-score-badge">
+                        <span class="hud-icon">✦</span>
+                        <span class="hud-value" id="display-score">0</span>
+                    </span>
+                    <span class="hud-badge hud-badge-lives" id="display-lives-badge">
+                        <span class="hud-icon">♥</span>
+                        <span class="hud-value" id="display-lives">
                             <span class="heart">♥</span><span class="heart">♥</span><span class="heart">♥</span>
                         </span>
-                    </div>
+                    </span>
+                    <span class="hud-badge hud-badge-timer" id="display-timer-badge" style="display:none">
+                        <span class="hud-icon">◉</span>
+                        <span class="hud-value" id="display-timer">0:00</span>
+                    </span>
                 </div>
             </div>
 
             <!-- Game Area -->
-            <div id="game-area">
+            <div id="game-area" class="category-memory">
                 <!-- Countdown Overlay -->
-                <div id="countdown-overlay" class="game-overlay hidden">
-                    <div class="countdown-number" id="countdown-number">3</div>
+                <div id="countdown-overlay" class="countdown-overlay hidden">
+                    <div class="countdown-stamp" id="countdown-number">3</div>
                 </div>
 
-                <!-- Game Grid (Pattern Recall) -->
-                <div id="pattern-grid" class="pattern-grid"></div>
+                <!-- Game content zones (populated by each game engine) -->
+                <div id="game-board" class="game-board"></div>
 
                 <!-- Status Message -->
                 <div id="game-status" class="game-status">
                     <span id="status-text">Watch the pattern...</span>
                 </div>
 
-                <!-- Start Button -->
+                <!-- Start Screen -->
                 <div id="game-start-screen" class="game-start-screen">
                     <div class="start-content">
-                        <div class="start-icon">🔮</div>
-                        <h2>Pattern Recall</h2>
-                        <p>Memorize the flashing tiles and replay them in order to practice visual recall.</p>
-                        <ul class="rules-list">
-                            <li>Watch the tiles light up</li>
-                            <li>Tap them back in the same order</li>
-                            <li>Each round adds one more tile</li>
-                            <li>Stay accurate and keep a steady rhythm</li>
-                        </ul>
-                        <button id="btn-start-game" class="btn btn-primary btn-lg">Try Cerebro</button>
+                        <div class="start-screen-layout">
+                            <div class="start-art">
+                                <img id="start-card-image" src="assets/games/pattern-recall-card.png" alt="Pattern Recall drill artwork">
+                            </div>
+                            <div class="start-info">
+                                <div class="start-tags" id="start-tags">
+                                    <span class="start-tag start-tag-difficulty-easy" id="start-difficulty-tag">Easy</span>
+                                    <span class="start-tag" id="start-category-tag">Memory</span>
+                                </div>
+                                <h2 id="start-title">Pattern Recall</h2>
+                                <p id="start-description">Memorize the flashing tiles and replay them in order to practice visual recall.</p>
+                                <div id="start-personal-best" class="start-personal-best hidden">
+                                    Your Best: <span class="pb-value" id="start-pb-value">0</span>
+                                </div>
+                                <ul class="rules-list" id="start-rules-list">
+                                    <li>Watch the tiles light up</li>
+                                    <li>Tap them back in the same order</li>
+                                    <li>Each round adds one more tile</li>
+                                    <li>Stay accurate and keep a steady rhythm</li>
+                                </ul>
+                                <button id="btn-start-game" class="btn btn-primary btn-lg">
+                                    <span>Begin Drill</span>
+                                    <span class="material-symbols-outlined">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Progress Bar (for input timeout) -->
-            <div id="progress-bar-container" class="progress-bar-container hidden">
-                <div id="progress-bar" class="progress-bar"></div>
-            </div>
+            <!-- Segmented Progress Bar -->
+            <div id="progress-bar-container" class="progress-segmented hidden"></div>
         </section>
 
         <!-- ─── Leaderboard View ───────────────────────── -->
@@ -330,6 +329,9 @@
                             <option value="pattern-recall">Pattern Recall</option>
                             <option value="digit-juggler">Digit Juggler</option>
                             <option value="signal-hunter">Signal Hunter</option>
+                            <option value="word-grid">Word Grid</option>
+                            <option value="flanker-task">Flanker Task</option>
+                            <option value="syllogisms">Syllogisms</option>
                             <option value="rule-shifter">Rule Shifter</option>
                             <option value="mirror-maze">Mirror Maze</option>
                             <option value="impulse-guard">Impulse Guard</option>
@@ -381,24 +383,55 @@
         <div class="modal">
             <div class="modal-header">
                 <h2 id="modal-title">Session Complete</h2>
+                <div id="modal-tier-badge" class="tier-badge hidden">
+                    <span class="tier-icon" id="tier-icon">◈</span>
+                    <span class="tier-label" id="tier-label">Focus Level I</span>
+                </div>
             </div>
             <div class="modal-body">
-                <div class="result-score">
+                <div class="result-score result-score-animated confetti-burst" id="confetti-container">
                     <span class="result-label">Final Score</span>
                     <span class="result-value" id="result-score">0</span>
                 </div>
-                <div class="result-details">
+                <div class="result-details" id="result-details-summary">
                     <div class="result-item">
-                        <span class="result-label">Level Reached</span>
+                        <span class="result-label">Level</span>
                         <span class="result-value" id="result-level">1</span>
                     </div>
                     <div class="result-item">
-                        <span class="result-label">Rounds Completed</span>
+                        <span class="result-label">Rounds</span>
                         <span class="result-value" id="result-rounds">0</span>
                     </div>
                     <div class="result-item">
                         <span class="result-label">Time</span>
                         <span class="result-value" id="result-time">0s</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Accuracy</span>
+                        <span class="result-value" id="result-accuracy">—</span>
+                    </div>
+                </div>
+                <div class="performance-meter hidden" id="performance-meter">
+                    <div class="meter-row">
+                        <span class="meter-label">Accuracy</span>
+                        <div class="meter-track">
+                            <div class="meter-fill" id="meter-accuracy" style="width:0%"></div>
+                        </div>
+                        <span class="meter-value" id="meter-accuracy-label">0%</span>
+                    </div>
+                    <div class="meter-row">
+                        <span class="meter-label">Avg Reaction</span>
+                        <div class="meter-track">
+                            <div class="meter-fill" id="meter-reaction" style="width:0%"></div>
+                        </div>
+                        <span class="meter-value" id="meter-reaction-label">0ms</span>
+                    </div>
+                    <div class="meter-row">
+                        <span class="meter-label">Streak</span>
+                        <div class="meter-track">
+                            <div class="meter-fill" id="meter-streak" style="width:0%"></div>
+                        </div>
+                        <span class="meter-value" id="meter-streak-label">0</span>
                     </div>
                 </div>
                 <div id="result-badge" class="result-badge hidden">
@@ -421,6 +454,7 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="js/utils/timer.js"></script>
     <script src="js/utils/api.js"></script>
+    <script src="js/utils/sound.js"></script>
     <script src="js/hero-scene.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/games/pattern-recall.js"></script>
@@ -430,6 +464,9 @@
     <script src="js/games/mirror-maze.js"></script>
     <script src="js/games/impulse-guard.js"></script>
     <script src="js/games/rapid-sort.js"></script>
+    <script src="js/games/word-grid.js"></script>
+    <script src="js/games/flanker-task.js"></script>
+    <script src="js/games/syllogisms.js"></script>
     <script src="js/app.js"></script>
 </body>
 

@@ -28,6 +28,7 @@ var MirrorMaze = (function ($) {
     var puzzleIndex = 0;
     var gridSize, mirrors, entryPos, entryDir, correctExit;
     var selectedExit = null;
+    var keyboardExitIdx = 0;
     var puzzleData = [];
     var puzzleTimerInterval = null;
     var gameTimer = CerebroTimer.create();
@@ -143,7 +144,7 @@ var MirrorMaze = (function ($) {
     function buildUI() {
         var $c = $('#mm-container');
         if ($c.length === 0) { $c = $('<div id="mm-container"></div>').appendTo('#game-area'); }
-        $('#pattern-grid').hide(); $('#game-start-screen').addClass('hidden');
+        $('#game-board').hide(); $('#game-start-screen').addClass('hidden');
 
         $c.html(
             '<div class="mm-puzzle-info">' +
@@ -228,6 +229,7 @@ var MirrorMaze = (function ($) {
         $('#mm-counter').text('Puzzle ' + (puzzleIndex + 1) + ' / ' + diff.puzzles);
         state = STATES.PLAYING;
         selectedExit = null;
+        keyboardExitIdx = 0;
         puzzleTimer.reset().start();
         startPuzzleTimer(diff.time);
         setStatus('Where does the ball exit?', 'your-turn');
@@ -278,8 +280,10 @@ var MirrorMaze = (function ($) {
             var timeBonus = Math.max(0.3, 1.0 - (puzzleTimer.getElapsedMs() / diff.time));
             var puzzleScore = Math.round(100 * diffMult * timeBonus);
             score += puzzleScore;
+            if (window.CerebroSound) CerebroSound.correct();
             setStatus('Correct! +' + puzzleScore, 'correct');
         } else {
+            if (window.CerebroSound) CerebroSound.wrong();
             setStatus('Wrong! The correct exit is highlighted.', 'wrong');
         }
 
@@ -320,12 +324,32 @@ var MirrorMaze = (function ($) {
     function endGame() {
         state = STATES.RESULTS; gameTimer.stop();
         var correctCount = puzzleData.filter(function (p) { return p.correct; }).length;
-        $('#result-score').text(score);
+        var acc = puzzleData.length > 0 ? Math.round(correctCount / puzzleData.length * 100) : 0;
         $('#result-level').text(level);
         $('#result-rounds').text(correctCount + '/' + puzzleData.length + ' correct');
         $('#result-time').text(gameTimer.getFormatted());
-        $('#modal-title').text(correctCount / puzzleData.length > 0.7 ? 'Great Spatial Sense! 🪞' : 'Keep Practicing! 🧭');
+        $('#result-accuracy').text(acc + '%');
+        $('#modal-title').text(acc > 70 ? 'Great Spatial Sense' : 'Keep Practicing');
         $('#result-badge').addClass('hidden');
+        if (window.CerebroSound) CerebroSound.complete();
+        if (window.CerebroApp && CerebroApp.animateScore) {
+            CerebroApp.animateScore(score);
+        } else {
+            $('#result-score').text(score);
+        }
+        if (window.CerebroApp && CerebroApp.setTierBadge) {
+            CerebroApp.setTierBadge(score);
+        }
+        if (window.CerebroApp && CerebroApp.updatePerformanceMeters) {
+            CerebroApp.updatePerformanceMeters({
+                accuracy: acc,
+                reaction: 0,
+                streak: correctCount
+            });
+        }
+        if (score > 2000 && window.CerebroApp && CerebroApp.spawnConfetti) {
+            CerebroApp.spawnConfetti();
+        }
         $('#modal-gameover').removeClass('hidden');
 
         if (sessionToken) {
@@ -356,9 +380,9 @@ var MirrorMaze = (function ($) {
     }
 
     function updateDisplay() {
-        $('#display-level').text('Level ' + level);
-        $('#display-round').text('Puzzle ' + (puzzleIndex + 1));
-        $('#display-score').text('Score: ' + score);
+        $('#display-level').text('Lv.' + level);
+        $('#display-round').text('P' + (puzzleIndex + 1));
+        $('#display-score').text(score);
     }
 
     function bindEvents() {
@@ -367,6 +391,25 @@ var MirrorMaze = (function ($) {
             selectExit($(this).attr('data-ex'), $(this).attr('data-ey'));
         });
         $(document).on('click.mirrormaze', '#mm-confirm', function () { confirmAnswer(); });
+        $(document).on('keydown.mirrormaze', function (e) {
+            if (state !== STATES.PLAYING) return;
+            var $exits = $('.mm-cell.edge.selectable');
+            if ($exits.length === 0) return;
+            if (e.code === 'ArrowLeft' || e.code === 'ArrowUp') {
+                e.preventDefault();
+                keyboardExitIdx = (keyboardExitIdx - 1 + $exits.length) % $exits.length;
+                var $prev = $exits.eq(keyboardExitIdx);
+                selectExit($prev.attr('data-ex'), $prev.attr('data-ey'));
+            } else if (e.code === 'ArrowRight' || e.code === 'ArrowDown') {
+                e.preventDefault();
+                keyboardExitIdx = (keyboardExitIdx + 1) % $exits.length;
+                var $next = $exits.eq(keyboardExitIdx);
+                selectExit($next.attr('data-ex'), $next.attr('data-ey'));
+            } else if (e.code === 'Enter' || e.code === 'Space') {
+                e.preventDefault();
+                confirmAnswer();
+            }
+        });
     }
 
     function init() { bindEvents(); }
@@ -374,7 +417,7 @@ var MirrorMaze = (function ($) {
     function cleanup() {
         clearInterval(puzzleTimerInterval);
         $(document).off('.mirrormaze');
-        $('#mm-container').remove(); $('#pattern-grid').show();
+        $('#mm-container').remove();
         state = STATES.INIT;
     }
 

@@ -127,7 +127,7 @@ var DigitJuggler = (function ($) {
             '<div class="stimulus-progress" id="dj-progress"></div>';
 
         // Replace game area content
-        $('#pattern-grid').hide();
+        $('#game-board').hide();
         $('#game-start-screen').addClass('hidden');
         var $custom = $('#dj-container');
         if ($custom.length === 0) {
@@ -227,6 +227,7 @@ var DigitJuggler = (function ($) {
             var speedBonus = Math.max(0.3, 1.0 - (reactionMs / diff.stimulusDuration));
             score += Math.round(BASE_POINTS * (1 + diff.nBack * 0.5) * speedBonus);
             $digitDisplay.addClass('flash-correct');
+            if (window.CerebroSound) CerebroSound.correct();
             updateProgressDot(currentIndex, 'hit');
         } else if (playerSaysMatch && !actualMatch) {
             // False alarm
@@ -234,12 +235,14 @@ var DigitJuggler = (function ($) {
             result = 'false-alarm';
             score += FALSE_ALARM_PENALTY;
             $digitDisplay.addClass('flash-wrong');
+            if (window.CerebroSound) CerebroSound.wrong();
             updateProgressDot(currentIndex, 'false-alarm');
         } else if (!playerSaysMatch && actualMatch) {
             // Miss
             misses++;
             result = 'miss';
             $digitDisplay.addClass('flash-wrong');
+            if (window.CerebroSound) CerebroSound.wrong();
             updateProgressDot(currentIndex, 'miss');
         } else {
             // Correct rejection
@@ -247,6 +250,7 @@ var DigitJuggler = (function ($) {
             result = 'correct-reject';
             score += 20;
             $digitDisplay.addClass('flash-nogo');
+            if (window.CerebroSound) CerebroSound.correct();
             updateProgressDot(currentIndex, 'correct-reject');
         }
 
@@ -357,6 +361,7 @@ var DigitJuggler = (function ($) {
         var zFa = approxZScore(faRate);
         var dPrime = (zHit - zFa).toFixed(2);
 
+        if (window.CerebroSound) CerebroSound.complete();
         showGameOverModal(dPrime);
         saveScore(dPrime);
     }
@@ -372,13 +377,35 @@ var DigitJuggler = (function ($) {
     }
 
     function showGameOverModal(dPrime) {
-        var acc = (hits + correctRejections) / sequence.length * 100;
-        $('#result-score').text(score);
+        var acc = Math.round((hits + correctRejections) / sequence.length * 100);
         $('#result-level').text('N=' + getDifficulty(level).nBack);
         $('#result-rounds').text(hits + '/' + isMatch.filter(Boolean).length + ' hits');
         $('#result-time').text(gameTimer.getFormatted());
-        $('#modal-title').text(acc > 85 ? 'Impressive! 🧠' : acc > 60 ? 'Good Work! 👍' : 'Keep Practicing');
+        $('#result-accuracy').text(acc + '%');
+        var title = acc > 85 ? 'Impressive Work' : acc > 60 ? 'Good Effort' : 'Keep Practicing';
+        $('#modal-title').text(title);
         $('#result-badge').addClass('hidden');
+        if (window.CerebroApp && CerebroApp.animateScore) {
+            CerebroApp.animateScore(score);
+        } else {
+            $('#result-score').text(score);
+        }
+        if (window.CerebroApp && CerebroApp.setTierBadge) {
+            CerebroApp.setTierBadge(score);
+        }
+        if (window.CerebroApp && CerebroApp.updatePerformanceMeters) {
+            var totalTrials = sequence.length;
+            var totalCorrect = hits + correctRejections;
+            var accPct = totalTrials > 0 ? Math.round(totalCorrect / totalTrials * 100) : 0;
+            CerebroApp.updatePerformanceMeters({
+                accuracy: accPct,
+                reaction: 0,
+                streak: hits
+            });
+        }
+        if (score > 2000 && window.CerebroApp && CerebroApp.spawnConfetti) {
+            CerebroApp.spawnConfetti();
+        }
         $('#modal-gameover').removeClass('hidden');
     }
 
@@ -434,9 +461,9 @@ var DigitJuggler = (function ($) {
     }
 
     function updateDisplay() {
-        $('#display-level').text('N=' + getDifficulty(level).nBack);
+        $('#display-level').text('Lv.' + level);
         $('#display-round').text((currentIndex + 1) + '/' + sequence.length);
-        $('#display-score').text('Score: ' + score);
+        $('#display-score').text(score);
     }
 
     function bindEvents() {
@@ -453,7 +480,7 @@ var DigitJuggler = (function ($) {
         $(document).on('keydown.digitjuggler', function (e) {
             if (state !== STATES.PLAYING || responded) return;
             if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); handleResponse(true); }
-            if (e.code === 'KeyX' || e.code === 'KeyN') { handleResponse(false); }
+            if (e.code === 'KeyX' || e.code === 'KeyN') { e.preventDefault(); handleResponse(false); }
         });
 
         // Resume from AFK pause
@@ -488,7 +515,6 @@ var DigitJuggler = (function ($) {
         clearTimeout(stimulusTimeout);
         $(document).off('.digitjuggler');
         $('#dj-container').remove();
-        $('#pattern-grid').show();
         setState(STATES.INIT);
     }
 

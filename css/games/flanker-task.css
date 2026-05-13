@@ -1,0 +1,212 @@
+/* ============================================================
+   Cerebro — Flanker Task Game Styles
+   Neo-Brutalist: Arrow stimuli, response buttons, feedback
+   ============================================================ */
+
+/* ── Grid Container ────────────────────────────────────── */
+.fk-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Stimulus Area ─────────────────────────────────────── */
+.fk-stimulus {
+    background: var(--bg-surface);
+    border: var(--border);
+    box-shadow: var(--shadow-md);
+    padding: 32px 48px;
+    transition: all var(--transition-fast);
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fk-stimulus.correct {
+    background: var(--accent-success);
+    box-shadow: 4px 4px 0 0 var(--border-color);
+}
+
+.fk-stimulus.wrong {
+    background: var(--accent-danger);
+    box-shadow: 4px 4px 0 0 var(--border-color);
+}
+
+.fk-stimulus.timeout {
+    background: var(--bg-secondary);
+    opacity: 0.6;
+}
+
+/* ── Arrows ────────────────────────────────────────────── */
+.fk-arrows {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+}
+
+.fk-arrow {
+    font-size: 3rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+    line-height: 1;
+    transition: all var(--transition-fast);
+    user-select: none;
+}
+
+.fk-arrow.fk-center {
+    font-size: 3.5rem;
+    color: var(--attention-accent, #d97706);
+    border: 2px solid var(--attention-accent, #d97706);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* ── Buttons ───────────────────────────────────────────── */
+.fk-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+.fk-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 16px 32px;
+    border: var(--border);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-hard);
+    cursor: pointer;
+    font-family: var(--font-label);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all var(--transition-fast);
+    min-width: 130px;
+}
+
+.fk-btn:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--border-color);
+}
+
+.fk-btn:active:not(:disabled) {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 0 var(--border-color);
+}
+
+.fk-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.fk-btn.correct {
+    background: var(--accent-success);
+}
+
+.fk-btn.wrong {
+    background: var(--accent-danger);
+}
+
+.fk-btn-arrow {
+    font-size: 1.8rem;
+}
+
+.fk-btn-left .fk-btn-arrow {
+    color: var(--attention-accent, #d97706);
+}
+
+.fk-btn-right .fk-btn-arrow {
+    color: var(--attention-accent, #d97706);
+}
+
+.fk-key-hint {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: 0.05em;
+}
+
+/* ── Feedback ──────────────────────────────────────────── */
+.fk-feedback {
+    font-family: var(--font-label);
+    font-size: 1.4rem;
+    font-weight: 700;
+    min-height: 2em;
+    text-align: center;
+}
+
+.fk-feedback.correct {
+    color: var(--accent-success);
+}
+
+.fk-feedback.wrong {
+    color: var(--accent-danger);
+}
+
+.fk-feedback.timeout {
+    color: var(--text-muted);
+}
+
+/* ── Progress Dots ─────────────────────────────────────── */
+.fk-progress {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.fk-dot {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-surface);
+    transition: all var(--transition-fast);
+}
+
+.fk-dot.current {
+    border-style: dashed;
+    border-color: var(--attention-accent, #d97706);
+}
+
+.fk-dot.correct {
+    background: var(--accent-success);
+}
+
+.fk-dot.wrong {
+    background: var(--accent-danger);
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 480px) {
+    .fk-arrow {
+        font-size: 2.2rem;
+    }
+
+    .fk-arrow.fk-center {
+        font-size: 2.6rem;
+    }
+
+    .fk-arrows {
+        gap: 6px;
+    }
+
+    .fk-stimulus {
+        padding: 20px 24px;
+    }
+
+    .fk-btn {
+        padding: 12px 20px;
+        min-width: 100px;
+        font-size: 0.95rem;
+    }
+}

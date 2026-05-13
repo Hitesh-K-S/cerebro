@@ -59,6 +59,7 @@ var PatternRecall = (function ($) {
     var playerInput = [];
     var inputIndex = 0;
     var lastClickTime = 0;
+    var keyboardCursor = 0;
     var sessionToken = null;
 
     // Timers
@@ -81,14 +82,16 @@ var PatternRecall = (function ($) {
     var $statusText, $startScreen, $progressContainer, $progressBar;
     var $displayLevel, $displayRound, $displayScore, $displayLives;
 
+    var progressSegments = [];
+    var totalSegments = 0;
+
     function cacheDom() {
-        $grid = $('#pattern-grid');
+        $grid = $('#game-board');
         $countdownOverlay = $('#countdown-overlay');
         $countdownNumber = $('#countdown-number');
         $statusText = $('#status-text');
         $startScreen = $('#game-start-screen');
         $progressContainer = $('#progress-bar-container');
-        $progressBar = $('#progress-bar');
         $displayLevel = $('#display-level');
         $displayRound = $('#display-round');
         $displayScore = $('#display-score');
@@ -162,6 +165,7 @@ var PatternRecall = (function ($) {
         sequence = [];
         playerInput = [];
         inputIndex = 0;
+        keyboardCursor = 0;
         sessionToken = null;
         replay = { rounds: [] };
 
@@ -179,8 +183,8 @@ var PatternRecall = (function ($) {
 
     function buildGrid(size) {
         $grid.empty();
-        $grid.removeClass('grid-3 grid-4 grid-5 round-complete');
-        $grid.addClass('grid-' + size);
+        $grid.removeClass('pattern-grid grid-3 grid-4 grid-5 round-complete');
+        $grid.addClass('pattern-grid grid-' + size);
 
         var totalTiles = size * size;
         for (var i = 0; i < totalTiles; i++) {
@@ -296,32 +300,54 @@ var PatternRecall = (function ($) {
         startInputTimeout();
     }
 
+    function buildSegmentedBar(count) {
+        totalSegments = count || sequence.length;
+        $progressContainer.empty().removeClass('hidden');
+        for (var i = 0; i < totalSegments; i++) {
+            var $seg = $('<div>').addClass('progress-seg').attr('data-seg', i);
+            $progressContainer.append($seg);
+        }
+    }
+
+    function updateSegmentedBar(completed, total) {
+        var segs = $progressContainer.find('.progress-seg');
+        segs.each(function (i) {
+            var $s = $(this);
+            if (i < completed) {
+                $s.addClass('filled').removeClass('active warning danger');
+            } else if (i === completed) {
+                $s.addClass('active');
+            } else {
+                $s.removeClass('filled active warning danger');
+            }
+        });
+    }
+
     function startInputTimeout() {
         var diff = getDifficulty(level);
         var totalTimeout = diff.timeout;
         var startTime = performance.now();
 
-        // Show progress bar
-        $progressContainer.removeClass('hidden');
-        $progressBar.css('width', '100%').removeClass('warning danger');
+        buildSegmentedBar(sequence.length);
 
         clearInterval(progressIntervalId);
         progressIntervalId = setInterval(function () {
             var elapsed = performance.now() - startTime;
             var remaining = Math.max(0, 1 - (elapsed / totalTimeout));
-            $progressBar.css('width', (remaining * 100) + '%');
+            var completed = Math.floor((1 - remaining) * sequence.length);
+            updateSegmentedBar(Math.min(completed, inputIndex), sequence.length);
 
+            var segs = $progressContainer.find('.progress-seg');
             if (remaining < 0.25) {
-                $progressBar.addClass('danger').removeClass('warning');
+                segs.filter('.active').addClass('danger').removeClass('warning');
             } else if (remaining < 0.5) {
-                $progressBar.addClass('warning');
+                segs.filter('.active').addClass('warning');
             }
         }, 50);
 
         clearTimeout(inputTimeoutId);
         inputTimeoutId = setTimeout(function () {
             clearInterval(progressIntervalId);
-            // Timeout = wrong answer
             handleWrongInput();
         }, totalTimeout);
     }
@@ -341,6 +367,7 @@ var PatternRecall = (function ($) {
         if (tileIndex === sequence[inputIndex]) {
             // Correct tap
             $tile.addClass('correct');
+            if (window.CerebroSound) CerebroSound.correct();
             setTimeout(function () { $tile.removeClass('correct'); }, 300);
 
             inputIndex++;
@@ -368,6 +395,7 @@ var PatternRecall = (function ($) {
         } else {
             // Wrong tap
             $tile.addClass('wrong');
+            if (window.CerebroSound) CerebroSound.wrong();
             setTimeout(function () { $tile.removeClass('wrong'); }, 500);
 
             clearTimeout(inputTimeoutId);
@@ -445,6 +473,8 @@ var PatternRecall = (function ($) {
         setTilesDisabled(true);
         setStatus('Session complete', 'wrong');
 
+        if (window.CerebroSound) CerebroSound.complete();
+
         // Show game over modal
         showGameOverModal();
 
@@ -453,20 +483,59 @@ var PatternRecall = (function ($) {
     }
 
     function showGameOverModal() {
-        $('#result-score').text(score);
+        var totalRounds = round - 1;
+        var accuracy = 0;
+        var avgReaction = 0;
+        var maxStreak = 0;
+
+        if (replay.rounds.length > 0) {
+            var correctCount = 0;
+            var totalReaction = 0;
+            var currentStreak = 0;
+            replay.rounds.forEach(function (r) {
+                var isCorrect = r.input.length === r.sequence.length;
+                for (var i = 0; i < r.input.length; i++) {
+                    if (r.input[i] === r.sequence[i]) {
+                        correctCount++;
+                    }
+                }
+                if (isCorrect) {
+                    currentStreak++;
+                    if (currentStreak > maxStreak) maxStreak = currentStreak;
+                } else {
+                    currentStreak = 0;
+                }
+                totalReaction += r.time_ms;
+            });
+            accuracy = Math.round((correctCount / (replay.rounds.length * 3)) * 100);
+            avgReaction = Math.round(totalReaction / replay.rounds.length);
+        }
+
         $('#result-level').text(level);
-        $('#result-rounds').text(round - 1);
+        $('#result-rounds').text(totalRounds);
         $('#result-time').text(gameTimer.getFormatted());
+        $('#result-accuracy').text(accuracy + '%');
         $('#result-badge').addClass('hidden');
+        $('#modal-title').text(accuracy > 85 ? 'Strong Recall' : 'Keep Practicing');
 
-        // Determine title based on performance
-        var title = 'Session Complete';
-        if (score > 5000) title = 'Outstanding Focus';
-        else if (score > 2000) title = 'Strong Progress';
-        else if (score > 1000) title = 'Nice Work';
-        else if (score > 500) title = 'Good Start';
-        $('#modal-title').text(title);
-
+        if (window.CerebroApp && CerebroApp.animateScore) {
+            CerebroApp.animateScore(score);
+        } else {
+            $('#result-score').text(score);
+        }
+        if (window.CerebroApp && CerebroApp.setTierBadge) {
+            CerebroApp.setTierBadge(score);
+        }
+        if (window.CerebroApp && CerebroApp.updatePerformanceMeters) {
+            CerebroApp.updatePerformanceMeters({
+                accuracy: accuracy,
+                reaction: avgReaction,
+                streak: maxStreak
+            });
+        }
+        if (score > 2000 && window.CerebroApp && CerebroApp.spawnConfetti) {
+            CerebroApp.spawnConfetti();
+        }
         $('#modal-gameover').removeClass('hidden');
     }
 
@@ -529,9 +598,9 @@ var PatternRecall = (function ($) {
     // ══════════════════════════════════════════════════════
 
     function updateDisplay() {
-        $displayLevel.text('Level ' + level);
-        $displayRound.text('Round ' + round);
-        $displayScore.text('Score: ' + score);
+        $displayLevel.text('Lv.' + level);
+        $displayRound.text('R' + round);
+        $displayScore.text(score);
         updateLivesDisplay();
     }
 
@@ -552,9 +621,12 @@ var PatternRecall = (function ($) {
 
     function setTilesDisabled(disabled) {
         if (disabled) {
-            $grid.find('.tile').addClass('disabled');
+            $grid.find('.tile').addClass('disabled').removeClass('keyboard-focused');
         } else {
             $grid.find('.tile').removeClass('disabled');
+            var gridSize = Math.round(Math.sqrt($grid.find('.tile').length));
+            keyboardCursor = Math.min(keyboardCursor, gridSize * gridSize - 1);
+            $grid.find('[data-index="' + keyboardCursor + '"]').addClass('keyboard-focused');
         }
     }
 
@@ -606,6 +678,53 @@ var PatternRecall = (function ($) {
             } else {
                 handleFocus();
             }
+        });
+
+        // Keyboard: arrow keys to navigate cursor, Enter/Space to select, 1-9 for tiles
+        $(document).on('keydown.patternrecall', function (e) {
+            if (state !== STATES.INPUT) return;
+            var totalTiles = $grid.find('.tile').length;
+            if (totalTiles === 0) return;
+            var gridSize = Math.round(Math.sqrt(totalTiles));
+
+            $grid.find('.tile').removeClass('keyboard-focused');
+
+            if (e.code === 'ArrowLeft') {
+                e.preventDefault();
+                if (keyboardCursor % gridSize > 0) keyboardCursor--;
+            } else if (e.code === 'ArrowRight') {
+                e.preventDefault();
+                if (keyboardCursor % gridSize < gridSize - 1) keyboardCursor++;
+            } else if (e.code === 'ArrowUp') {
+                e.preventDefault();
+                if (keyboardCursor >= gridSize) keyboardCursor -= gridSize;
+            } else if (e.code === 'ArrowDown') {
+                e.preventDefault();
+                if (keyboardCursor < totalTiles - gridSize) keyboardCursor += gridSize;
+            } else if (e.code === 'Enter' || e.code === 'Space') {
+                e.preventDefault();
+                $grid.find('.tile').removeClass('keyboard-focused');
+                handleTileClick(keyboardCursor);
+                return;
+            } else if (e.code >= 'Digit1' && e.code <= 'Digit9') {
+                var idx = parseInt(e.code.charAt(5), 10) - 1;
+                if (idx < totalTiles) {
+                    e.preventDefault();
+                    $grid.find('.tile').removeClass('keyboard-focused');
+                    handleTileClick(idx);
+                    return;
+                }
+            } else if (e.code >= 'Numpad1' && e.code <= 'Numpad9') {
+                var idx = parseInt(e.code.charAt(6), 10) - 1;
+                if (idx < totalTiles) {
+                    e.preventDefault();
+                    $grid.find('.tile').removeClass('keyboard-focused');
+                    handleTileClick(idx);
+                    return;
+                }
+            }
+
+            $grid.find('[data-index="' + keyboardCursor + '"]').addClass('keyboard-focused');
         });
     }
 
@@ -670,6 +789,9 @@ var PatternRecall = (function ($) {
         gameTimer.reset();
         roundTimer.reset();
         $(document).off('.patternrecall');
+        $grid.find('.tile').removeClass('keyboard-focused');
+        $grid.empty();
+        $progressContainer.empty().addClass('hidden');
         setState(STATES.INIT);
     }
 

@@ -1,0 +1,653 @@
+/* ============================================================
+   Cerebro — Shared Game UI Components
+   Category-themeable Neo-Brutalist game components
+   ============================================================ */
+
+:root {
+    --memory-accent: #6366f1;
+    --memory-glow: rgba(99, 102, 241, 0.12);
+    --memory-bg: linear-gradient(145deg, rgba(99, 102, 241, 0.04), rgba(99, 102, 241, 0.01));
+
+    --attention-accent: #d97706;
+    --attention-glow: rgba(217, 119, 6, 0.12);
+    --attention-bg: linear-gradient(145deg, rgba(217, 119, 6, 0.04), rgba(217, 119, 6, 0.01));
+
+    --logic-accent: #059669;
+    --logic-glow: rgba(5, 150, 105, 0.12);
+    --logic-bg: linear-gradient(145deg, rgba(5, 150, 105, 0.04), rgba(5, 150, 105, 0.01));
+
+    --speed-accent: #dc2626;
+    --speed-glow: rgba(220, 38, 38, 0.12);
+    --speed-bg: linear-gradient(145deg, rgba(220, 38, 38, 0.04), rgba(220, 38, 38, 0.01));
+
+    --hud-bg: rgba(255, 253, 247, 0.92);
+    --hud-border: 2px solid var(--border-color);
+    --hud-shadow: 3px 3px 0 0 var(--border-color);
+}
+
+/* ── Ambient Category Backgrounds ──────────────────────── */
+#game-area.category-memory {
+    background: var(--memory-bg), var(--bg-body);
+    position: relative;
+}
+
+#game-area.category-memory::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 30%, var(--memory-glow), transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.04), transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#game-area.category-attention {
+    background: var(--attention-bg), var(--bg-body);
+}
+
+#game-area.category-attention::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 20%, var(--attention-glow), transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(217, 119, 6, 0.04), transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#game-area.category-logic {
+    background: var(--logic-bg), var(--bg-body);
+}
+
+#game-area.category-logic::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(5, 150, 105, 0.03) 40px, rgba(5, 150, 105, 0.03) 41px),
+        repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(5, 150, 105, 0.03) 40px, rgba(5, 150, 105, 0.03) 41px);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#game-area.category-speed {
+    background: var(--speed-bg), var(--bg-body);
+}
+
+#game-area.category-speed::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, var(--speed-glow), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Ensure game content sits above ambient layer */
+#game-area > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ── HUD Badges ────────────────────────────────────────── */
+.hud-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.hud-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: var(--hud-border);
+    background: var(--hud-bg);
+    box-shadow: var(--hud-shadow);
+    font-family: var(--font-label);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.hud-badge .hud-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.hud-badge .hud-value {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.hud-badge-level {
+    background: var(--primary-soft);
+}
+
+.hud-badge-score {
+    background: var(--hud-bg);
+}
+
+.hud-badge-score .hud-value {
+    color: var(--primary);
+    min-width: 3ch;
+    text-align: right;
+}
+
+.hud-badge-lives {
+    background: var(--hud-bg);
+}
+
+.hud-badge-lives .heart {
+    color: var(--accent-danger);
+    font-size: 1rem;
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.hud-badge-lives .heart.lost {
+    opacity: 0.2;
+    transform: scale(0.8);
+}
+
+.hud-badge-timer {
+    background: var(--hud-bg);
+}
+
+.hud-badge-timer .hud-value {
+    color: var(--attention-accent);
+    min-width: 4ch;
+    text-align: center;
+}
+
+.hud-badge-round {
+    background: var(--hud-bg);
+}
+
+/* ── Countdown Overlay ─────────────────────────────────── */
+.countdown-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 253, 247, 0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.countdown-overlay.hidden {
+    display: none;
+}
+
+.countdown-stamp {
+    width: 140px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border: var(--hud-border);
+    background: var(--bg-surface);
+    box-shadow: 8px 8px 0 0 var(--border-color);
+    font-family: var(--font-display);
+    font-size: 5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    animation: countdownStampIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.countdown-stamp.go {
+    color: var(--primary);
+    font-size: 3.5rem;
+    animation: countdownStampGo 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes countdownStampIn {
+    0% {
+        transform: scale(0.3) rotate(-12deg);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1) rotate(2deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes countdownStampGo {
+    0% {
+        transform: scale(0.4);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ── Segmented Progress Bar ────────────────────────────── */
+.progress-segmented {
+    display: flex;
+    gap: 4px;
+    width: min(100%, 640px);
+    height: 16px;
+    margin: 20px auto 0;
+}
+
+.progress-segmented.hidden {
+    display: none;
+}
+
+.progress-seg {
+    flex: 1;
+    height: 100%;
+    border: var(--hud-border);
+    background: var(--bg-surface);
+    box-shadow: inset 1px 1px 0 0 rgba(0, 0, 0, 0.08);
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-seg.filled {
+    background: var(--primary);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.progress-seg.filled.warning {
+    background: var(--warning);
+}
+
+.progress-seg.filled.danger {
+    background: var(--accent-danger);
+    animation: segDangerPulse 0.5s ease infinite;
+}
+
+.progress-seg.active {
+    box-shadow: var(--hud-shadow);
+}
+
+@keyframes segDangerPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+/* ── Status Text ───────────────────────────────────────── */
+.game-status {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    min-height: 2em;
+    text-align: center;
+    color: var(--muted);
+    font-family: var(--font-label);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color var(--transition-normal), transform var(--transition-normal);
+}
+
+.game-status.watching {
+    color: var(--primary);
+}
+
+.game-status.your-turn {
+    color: var(--warning);
+}
+
+.game-status.correct {
+    color: var(--accent-success);
+}
+
+.game-status.wrong {
+    color: var(--accent-danger);
+}
+
+.game-status.round-done {
+    color: var(--primary);
+}
+
+/* ── Score Popup ───────────────────────────────────────── */
+.score-popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 2rem;
+    color: var(--primary);
+    pointer-events: none;
+    animation: scorePopup 1s ease forwards;
+    z-index: 50;
+    text-shadow: 2px 2px 0 var(--border-color);
+}
+
+@keyframes scorePopup {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    30% {
+        opacity: 1;
+        transform: translate(-50%, -60%) scale(1.2);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -130%) scale(0.8);
+    }
+}
+
+/* ── Tile Base Styles ──────────────────────────────────── */
+.tile-base {
+    aspect-ratio: 1;
+    background: var(--bg-surface);
+    border: 2px solid var(--border-color);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.tile-base:hover:not(.disabled) {
+    background: var(--bg-surface-hover);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 0 var(--border-color);
+}
+
+.tile-base:active:not(.disabled) {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 var(--border-color);
+}
+
+.tile-base.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* ── Category accent helpers ───────────────────────────── */
+.accent-memory { --cat-accent: var(--memory-accent); }
+.accent-attention { --cat-accent: var(--attention-accent); }
+.accent-logic { --cat-accent: var(--logic-accent); }
+.accent-speed { --cat-accent: var(--speed-accent); }
+
+/* ── Game Over: Animated Score ─────────────────────────── */
+.result-score-animated .result-value {
+    display: inline-block;
+    animation: scoreCountIn 0.6s ease both;
+}
+
+@keyframes scoreCountIn {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* ── Performance Meter ─────────────────────────────────── */
+.performance-meter {
+    display: grid;
+    gap: 8px;
+    margin-top: var(--space-4);
+}
+
+.meter-row {
+    display: grid;
+    grid-template-columns: 8rem 1fr 4rem;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-label);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.meter-label {
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+.meter-track {
+    height: 14px;
+    border: var(--hud-border);
+    background: var(--bg-body);
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: 0%;
+}
+
+.meter-fill.good { background: var(--primary); }
+.meter-fill.great { background: var(--primary); }
+.meter-fill.ok { background: var(--warning); }
+.meter-fill.low { background: var(--accent-danger); }
+
+.meter-value {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    text-align: right;
+    color: var(--text-primary);
+}
+
+/* ── Tier Badge ────────────────────────────────────────── */
+.tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border: var(--hud-border);
+    background: var(--primary-soft);
+    box-shadow: var(--hud-shadow);
+    font-family: var(--font-label);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: var(--space-3) 0;
+}
+
+.tier-badge .tier-icon {
+    font-size: 1.3rem;
+}
+
+/* ── Confetti burst ────────────────────────────────────── */
+.confetti-burst {
+    position: relative;
+    overflow: visible;
+}
+
+.confetti-piece {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border: 2px solid var(--border-color);
+    animation: confettiFall 1.2s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes confettiFall {
+    0% {
+        transform: translate(0, 0) rotate(0deg) scale(0);
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--cx, 40px), var(--cy, -60px)) rotate(var(--cr, 180deg)) scale(1);
+        opacity: 0;
+    }
+}
+
+/* ── Start Screen ──────────────────────────────────────── */
+.start-screen-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    align-items: center;
+}
+
+.start-content {
+    width: min(100%, 720px);
+}
+
+.start-art {
+    display: grid;
+    place-items: center;
+}
+
+.start-art img {
+    width: 100%;
+    max-width: 320px;
+    border: var(--hud-border);
+    box-shadow: var(--shadow-lg);
+    image-rendering: auto;
+}
+
+.start-info {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.start-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.start-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border: var(--hud-border);
+    background: var(--bg-surface);
+    box-shadow: 2px 2px 0 0 var(--border-color);
+    font-family: var(--font-label);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.start-tag-difficulty-easy { background: #fff3cf; }
+.start-tag-difficulty-medium { background: #ffdcc4; }
+.start-tag-difficulty-hard { background: #e2f0cb; }
+
+.start-personal-best {
+    padding: 8px 12px;
+    border: var(--hud-border);
+    background: var(--primary-soft);
+    box-shadow: var(--hud-shadow);
+    font-family: var(--font-label);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.start-personal-best .pb-value {
+    font-family: var(--font-mono);
+    color: var(--primary);
+    font-size: 0.9rem;
+}
+
+/* ── Game Header ───────────────────────────────────────── */
+.game-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+    padding: 18px 24px;
+    border: var(--hud-border);
+    background: var(--hud-bg);
+    box-shadow: var(--hud-shadow);
+}
+
+.game-header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.game-header-title h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-transform: none;
+    line-height: 1.1;
+}
+
+.game-header-title .game-header-category {
+    font-family: var(--font-label);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+}
+
+/* ── Game Board (shared game content area) ────────────── */
+.game-board {
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 720px) {
+    .start-screen-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .start-art {
+        display: none;
+    }
+
+    .hud-bar {
+        gap: 4px;
+    }
+
+    .hud-badge {
+        padding: 4px 8px;
+        font-size: 0.65rem;
+    }
+
+    .progress-segmented {
+        height: 12px;
+        gap: 3px;
+    }
+
+    .game-header {
+        flex-direction: column;
+        padding: 14px 16px;
+    }
+
+    .meter-row {
+        grid-template-columns: 6rem 1fr 3rem;
+    }
+}

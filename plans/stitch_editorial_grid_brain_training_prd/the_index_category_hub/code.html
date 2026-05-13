@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Editorial Grid Brain Training - The Index</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4e0df2",
+                        "background-light": "#F4F4F0",
+                        "background-dark": "#151022",
+                        "surface": "#FFFFFF",
+                        "text-main": "#111111",
+                        "muted": "#8C8C8C",
+                        "accent": "#FF4D00"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "0px", "sm": "2px"},
+                    boxShadow: {
+                        'hard': '4px 4px 0px 0px #111111',
+                    },
+                    cursor: {
+                        'crosshair': 'crosshair',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #F4F4F0;
+            color: #111111;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        /* Strict Borders */
+        .border-strict {
+            border: 2px solid #111111;
+        }
+        .border-b-strict { border-bottom: 2px solid #111111; }
+        .border-r-strict { border-right: 2px solid #111111; }
+        .border-l-strict { border-left: 2px solid #111111; }
+        .border-t-strict { border-top: 2px solid #111111; }
+
+        /* Typography Utilities */
+        .text-massive {
+            font-size: clamp(4rem, 8vw, 120px);
+            line-height: 0.8;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+        }
+
+        .text-body {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .text-small {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Domain Card Hover */
+        .domain-card {
+            transition: background-color 0.1s ease, color 0.1s ease;
+            cursor: crosshair;
+        }
+        .domain-card:hover {
+            background-color: #4e0df2;
+            color: #FFFFFF;
+        }
+        .domain-card:hover .text-muted-hover {
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Checkbox Styling */
+        .custom-checkbox input[type="checkbox"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #111111;
+            border-radius: 0;
+            background-color: transparent;
+            display: inline-grid;
+            place-content: center;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+        .custom-checkbox input[type="checkbox"]::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            transform: scale(0);
+            transition: 0.1s transform ease-in-out;
+            box-shadow: inset 1em 1em #4e0df2;
+            background-color: #4e0df2;
+        }
+        .custom-checkbox input[type="checkbox"]:checked::before {
+            transform: scale(1);
+        }
+        .custom-checkbox:hover input[type="checkbox"] {
+            background-color: #111111;
+        }
+        .custom-checkbox:hover input[type="checkbox"]::before {
+            box-shadow: inset 1em 1em #FFFFFF;
+        }
+        
+        /* Grid setup to prevent double borders */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 2px;
+            background-color: #111111; /* Acts as the border color between gaps */
+            border: 2px solid #111111;
+        }
+        
+        .masonry-item {
+            background-color: #F4F4F0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Loading Noise - Applied via class */
+        .loading-noise {
+            background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');
+            opacity: 0.1;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: none;
+        }
+        .is-loading .loading-noise {
+            display: block;
+        }
+        .is-loading .content-wrapper {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-primary selection:text-white">
+<!-- Global Navigation Included based on Relevance Test (Browsing Destination) -->
+<div class="relative flex h-auto w-full flex-col bg-surface group/design-root overflow-x-hidden border-b-strict z-50">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-8 lg:px-12 flex flex-1 justify-center py-0">
+<div class="layout-content-container flex flex-col w-full flex-1">
+<header class="flex items-center justify-between whitespace-nowrap py-4">
+<div class="flex items-center gap-4 text-text-main">
+<h2 class="text-text-main text-2xl font-black leading-tight tracking-[-0.05em] uppercase">Editorial Grid</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9 text-small">
+<a class="text-text-main hover:text-primary transition-colors" href="#">FRONT PAGE</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">INDEX</a>
+<a class="text-text-main hover:text-primary transition-colors" href="#">THE RECORD</a>
+</div>
+</div>
+</header>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Layout: 3 Col Sidebar + 9 Col Grid Area -->
+<main class="flex-1 flex w-full max-w-[1920px] mx-auto bg-text-main gap-[2px] border-b-strict border-l-strict border-r-strict">
+<!-- Filter Sidebar (3 columns equivalent) -->
+<aside class="w-[300px] xl:w-[360px] flex-shrink-0 bg-background-light flex flex-col sticky top-0 h-[calc(100vh-68px)]">
+<div class="p-8 border-b-strict flex-shrink-0">
+<h1 class="text-4xl font-extrabold tracking-tighter uppercase mb-2">The Index</h1>
+<p class="text-small text-muted">Directory of Cognitive Domains</p>
+</div>
+<div class="p-8 flex-1 overflow-y-auto">
+<h3 class="text-small mb-6 text-text-main">Filter Parameters</h3>
+<div class="space-y-4">
+<label class="custom-checkbox flex items-center gap-4 group cursor-pointer">
+<input checked="" type="checkbox"/>
+<span class="text-body group-hover:text-primary transition-colors uppercase font-bold tracking-tight">Memory</span>
+<span class="ml-auto text-small text-muted">12</span>
+</label>
+<label class="custom-checkbox flex items-center gap-4 group cursor-pointer">
+<input checked="" type="checkbox"/>
+<span class="text-body group-hover:text-primary transition-colors uppercase font-bold tracking-tight">Focus</span>
+<span class="ml-auto text-small text-muted">08</span>
+</label>
+<label class="custom-checkbox flex items-center gap-4 group cursor-pointer">
+<input checked="" type="checkbox"/>
+<span class="text-body group-hover:text-primary transition-colors uppercase font-bold tracking-tight">Fluid Intelligence</span>
+<span class="ml-auto text-small text-muted">15</span>
+</label>
+<label class="custom-checkbox flex items-center gap-4 group cursor-pointer">
+<input type="checkbox"/>
+<span class="text-body group-hover:text-primary transition-colors uppercase font-bold tracking-tight">Spatial Reasoning</span>
+<span class="ml-auto text-small text-muted">04</span>
+</label>
+<label class="custom-checkbox flex items-center gap-4 group cursor-pointer mt-8 pt-8 border-t-strict">
+<input type="checkbox"/>
+<span class="text-body group-hover:text-primary transition-colors uppercase font-bold tracking-tight">Linguistics</span>
+<span class="ml-auto text-small text-muted">09</span>
+</label>
+<label class="custom-checkbox flex items-center gap-4 group cursor-pointer">
+<input type="checkbox"/>
+<span class="text-body group-hover:text-primary transition-colors uppercase font-bold tracking-tight">Reaction Velocity</span>
+<span class="ml-auto text-small text-muted">11</span>
+</label>
+</div>
+</div>
+<div class="p-8 border-t-strict mt-auto bg-surface">
+<button class="w-full h-14 bg-primary text-white text-small hover:bg-text-main transition-all duration-100 hover:-translate-y-1 hover:-translate-x-1 shadow-[4px_4px_0px_0px_#111111]">
+                    APPLY PARAMETERS
+                </button>
+</div>
+</aside>
+<!-- Masonry Grid Area (9 columns equivalent) -->
+<section class="flex-1 masonry-grid h-fit min-h-full">
+<!-- Large Focus Block -->
+<article class="masonry-item domain-card col-span-12 xl:col-span-8 row-span-2 min-h-[400px] p-8 flex flex-col justify-between">
+<div class="loading-noise"></div>
+<div class="content-wrapper flex flex-col h-full justify-between pointer-events-none">
+<div class="flex justify-between items-start">
+<span class="text-small border-strict px-2 py-1 bg-surface text-text-main">DOMAIN 01</span>
+<span class="text-small text-muted text-muted-hover">8 EXERCISES</span>
+</div>
+<div class="mt-auto">
+<h2 class="text-massive break-words w-[120%] -ml-[2%]">FOCUS</h2>
+<p class="text-body mt-4 max-w-md">Sustained attention protocols and distractibility resistance training.</p>
+</div>
+</div>
+</article>
+<!-- Tall Memory Block -->
+<article class="masonry-item domain-card col-span-12 md:col-span-6 xl:col-span-4 row-span-3 min-h-[600px] p-8 flex flex-col justify-between">
+<div class="loading-noise"></div>
+<div class="content-wrapper flex flex-col h-full justify-between pointer-events-none">
+<div class="flex justify-between items-start">
+<span class="text-small border-strict px-2 py-1 bg-surface text-text-main">DOMAIN 02</span>
+<span class="text-small text-muted text-muted-hover">12 EXERCISES</span>
+</div>
+<div class="mt-auto overflow-hidden">
+<h2 class="text-massive writing-mode-vertical rotate-180 transform origin-center whitespace-nowrap mb-8" style="writing-mode: vertical-rl;">MEMORY</h2>
+<p class="text-body mt-4">Working memory expansion and sequence retention.</p>
+</div>
+</div>
+</article>
+<!-- Wide Fluid Intelligence Block -->
+<article class="masonry-item domain-card col-span-12 md:col-span-6 xl:col-span-8 row-span-1 min-h-[280px] p-8 flex flex-col justify-between">
+<div class="loading-noise"></div>
+<div class="content-wrapper flex flex-col h-full justify-between pointer-events-none">
+<div class="flex justify-between items-start">
+<span class="text-small border-strict px-2 py-1 bg-surface text-text-main">DOMAIN 03</span>
+<span class="text-small text-muted text-muted-hover">15 EXERCISES</span>
+</div>
+<div class="mt-auto">
+<h2 class="text-[clamp(3rem,5vw,80px)] font-extrabold leading-none tracking-tighter uppercase">FLUID INTELLIGENCE</h2>
+</div>
+</div>
+</article>
+<!-- Small Spatial Block -->
+<article class="masonry-item domain-card col-span-12 md:col-span-4 xl:col-span-4 row-span-1 min-h-[280px] p-6 flex flex-col justify-between">
+<div class="loading-noise"></div>
+<div class="content-wrapper flex flex-col h-full justify-between pointer-events-none">
+<div class="flex justify-between items-start">
+<span class="text-small border-strict px-2 py-1 bg-surface text-text-main">DOMAIN 04</span>
+</div>
+<div class="mt-auto">
+<h2 class="text-[clamp(2rem,4vw,60px)] font-extrabold leading-none tracking-tighter uppercase break-words w-[110%] -ml-[5%]">SPATIAL REASONING</h2>
+</div>
+</div>
+</article>
+<!-- Small Linguistics Block -->
+<article class="masonry-item domain-card col-span-12 md:col-span-4 xl:col-span-4 row-span-1 min-h-[280px] p-6 flex flex-col justify-between">
+<div class="loading-noise"></div>
+<div class="content-wrapper flex flex-col h-full justify-between pointer-events-none">
+<div class="flex justify-between items-start">
+<span class="text-small border-strict px-2 py-1 bg-surface text-text-main">DOMAIN 05</span>
+</div>
+<div class="mt-auto">
+<h2 class="text-[clamp(2.5rem,4vw,64px)] font-extrabold leading-none tracking-tighter uppercase">LINGUISTICS</h2>
+</div>
+</div>
+</article>
+<!-- Medium Velocity Block -->
+<article class="masonry-item domain-card col-span-12 md:col-span-4 xl:col-span-4 row-span-1 min-h-[280px] p-6 flex flex-col justify-between bg-surface">
+<div class="loading-noise"></div>
+<div class="content-wrapper flex flex-col h-full justify-between pointer-events-none">
+<div class="flex justify-between items-start">
+<span class="text-small border-strict px-2 py-1 bg-background-light text-text-main">DOMAIN 06</span>
+<span class="text-small text-accent font-bold">NEW</span>
+</div>
+<div class="mt-auto">
+<h2 class="text-[clamp(2.5rem,4vw,64px)] font-extrabold leading-none tracking-tighter uppercase">VELOCITY</h2>
+</div>
+</div>
+</article>
+</section>
+</main>
+</body></html>

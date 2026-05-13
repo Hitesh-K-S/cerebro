@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <rect width="400" height="300" fill="#fbf9f1" rx="8"/>
+  <rect x="8" y="8" width="384" height="284" fill="none" stroke="#2d2926" stroke-width="3" rx="6"/>
+  <text x="200" y="60" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="24" font-weight="800" fill="#2d2926">FLANKER TASK</text>
+  <text x="200" y="85" text-anchor="middle" font-family="Manrope, sans-serif" font-size="13" fill="#5f665f">Selective Attention</text>
+  <line x1="80" y1="100" x2="320" y2="100" stroke="#d97706" stroke-width="2"/>
+  <g transform="translate(200, 170)" text-anchor="middle" font-family="monospace" font-size="44" font-weight="800">
+    <text x="-80" y="0" fill="#2d2926">→</text>
+    <text x="-40" y="0" fill="#2d2926">→</text>
+    <text x="0" y="0" fill="#d97706" stroke="#2d2926" stroke-width="1.5" transform="scale(1.2)">←</text>
+    <text x="44" y="0" fill="#2d2926">→</text>
+    <text x="88" y="0" fill="#2d2926">→</text>
+  </g>
+  <text x="200" y="220" text-anchor="middle" font-family="Manrope, sans-serif" font-size="13" fill="#5f665f">Respond to the CENTER arrow</text>
+  <rect x="100" y="238" width="80" height="30" fill="#fff" stroke="#2d2926" stroke-width="2" rx="2"/>
+  <text x="140" y="258" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#2d2926">←  A</text>
+  <rect x="220" y="238" width="80" height="30" fill="#fff" stroke="#2d2926" stroke-width="2" rx="2"/>
+  <text x="260" y="258" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="11" font-weight="700" fill="#2d2926">D  →</text>
+</svg>

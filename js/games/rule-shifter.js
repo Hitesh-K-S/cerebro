@@ -124,7 +124,7 @@ var RuleShifter = (function ($) {
         if ($custom.length === 0) {
             $custom = $('<div id="rs-container"></div>').appendTo('#game-area');
         }
-        $('#pattern-grid').hide();
+        $('#game-board').hide();
         $('#game-start-screen').addClass('hidden');
 
         $custom.html(
@@ -150,7 +150,7 @@ var RuleShifter = (function ($) {
         $bins.empty();
         binCards.forEach(function (bc, idx) {
             var $bin = $('<div class="rs-bin" data-bin="' + idx + '"></div>');
-            $bin.html(renderCardHTML(bc, true) + '<div class="rs-bin-label">Bin ' + (idx + 1) + '</div>');
+            $bin.html(renderCardHTML(bc, true) + '<div class="rs-bin-label">[' + (idx + 1) + '] Bin ' + (idx + 1) + '</div>');
             $bins.append($bin);
         });
     }
@@ -182,6 +182,7 @@ var RuleShifter = (function ($) {
             correctCount++;
             streak++;
             score += postShift ? 150 : 50;
+            if (window.CerebroSound) CerebroSound.correct();
 
             if (postShift) {
                 postShiftCorrect++;
@@ -202,6 +203,7 @@ var RuleShifter = (function ($) {
         } else {
             errorCount++;
             streak = 0;
+            if (window.CerebroSound) CerebroSound.wrong();
 
             // Check perseverative error
             if (previousRule && currentCard[previousRule] === binCards[binIndex][previousRule]) {
@@ -295,13 +297,33 @@ var RuleShifter = (function ($) {
         state = STATES.RESULTS;
         gameTimer.stop();
         clearInterval(gameTimerInterval);
+        var acc = totalCards > 0 ? Math.round(correctCount / totalCards * 100) : 0;
 
-        $('#result-score').text(score);
         $('#result-level').text(level);
         $('#result-rounds').text(correctCount + '/' + totalCards + ' correct');
         $('#result-time').text(gameTimer.getFormatted());
-        $('#modal-title').text(shiftsDetected > 2 ? 'Adaptable Mind! 🔄' : 'Keep Adapting! 🧩');
+        $('#result-accuracy').text(acc + '%');
+        $('#modal-title').text(shiftsDetected > 2 ? 'Adaptable Mind' : 'Keep Adapting');
         $('#result-badge').addClass('hidden');
+        if (window.CerebroSound) CerebroSound.complete();
+        if (window.CerebroApp && CerebroApp.animateScore) {
+            CerebroApp.animateScore(score);
+        } else {
+            $('#result-score').text(score);
+        }
+        if (window.CerebroApp && CerebroApp.setTierBadge) {
+            CerebroApp.setTierBadge(score);
+        }
+        if (window.CerebroApp && CerebroApp.updatePerformanceMeters) {
+            CerebroApp.updatePerformanceMeters({
+                accuracy: acc,
+                reaction: 0,
+                streak: shiftsDetected
+            });
+        }
+        if (score > 2000 && window.CerebroApp && CerebroApp.spawnConfetti) {
+            CerebroApp.spawnConfetti();
+        }
         $('#modal-gameover').removeClass('hidden');
 
         if (sessionToken) {
@@ -344,15 +366,27 @@ var RuleShifter = (function ($) {
     }
 
     function updateDisplay() {
-        $('#display-level').text('Level ' + level);
-        $('#display-round').text('Cards: ' + totalCards);
-        $('#display-score').text('Score: ' + score);
+        $('#display-level').text('Lv.' + level);
+        $('#display-round').text(totalCards + ' cards');
+        $('#display-score').text(score);
     }
 
     function bindEvents() {
         $(document).off('.ruleshifter');
         $(document).on('click.ruleshifter', '.rs-bin', function () {
             handleSort(parseInt($(this).attr('data-bin'), 10));
+        });
+        $(document).on('keydown.ruleshifter', function (e) {
+            if (state !== STATES.PLAYING || !currentCard) return;
+            var binIdx = -1;
+            if (e.code === 'Digit1' || e.code === 'Numpad1') binIdx = 0;
+            else if (e.code === 'Digit2' || e.code === 'Numpad2') binIdx = 1;
+            else if (e.code === 'Digit3' || e.code === 'Numpad3') binIdx = 2;
+            else if (e.code === 'Digit4' || e.code === 'Numpad4') binIdx = 3;
+            if (binIdx >= 0 && binIdx < binCards.length) {
+                e.preventDefault();
+                handleSort(binIdx);
+            }
         });
     }
 
@@ -362,7 +396,6 @@ var RuleShifter = (function ($) {
         clearInterval(gameTimerInterval);
         $(document).off('.ruleshifter');
         $('#rs-container').remove();
-        $('#pattern-grid').show();
         state = STATES.INIT;
     }
 

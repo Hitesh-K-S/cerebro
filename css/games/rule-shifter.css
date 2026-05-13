@@ -1,6 +1,6 @@
 /* ============================================================
    Cerebro — Rule Shifter Game Styles
-   Cognitive flexibility / set-shifting card sort
+   Neo-Brutalist: Cognitive flexibility / set-shifting card sort
    ============================================================ */
 
 /* ── Card ──────────────────────────────────────────────── */
@@ -8,8 +8,8 @@
     width: 140px;
     height: 180px;
     background: var(--bg-surface);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--radius-lg);
+    border: var(--border);
+    box-shadow: var(--shadow-md);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -17,18 +17,17 @@
     gap: 6px;
     margin: 0 auto var(--space-lg);
     transition: all var(--transition-fast);
-    box-shadow: var(--shadow-md);
     position: relative;
 }
 
 .rs-card.correct-feedback {
     border-color: var(--accent-success);
-    box-shadow: 0 0 24px rgba(0, 184, 148, 0.3);
+    box-shadow: 6px 6px 0 0 var(--accent-success);
 }
 
 .rs-card.wrong-feedback {
     border-color: var(--accent-danger);
-    box-shadow: 0 0 24px rgba(225, 112, 85, 0.3);
+    box-shadow: 6px 6px 0 0 var(--accent-danger);
     animation: tileWrongShake 0.4s ease;
 }
 
@@ -59,7 +58,7 @@
 }
 
 .rs-shape.square {
-    border-radius: 4px;
+    border-radius: 0;
 }
 
 .rs-shape.triangle {
@@ -76,7 +75,7 @@
     width: 20px;
     height: 20px;
     transform: rotate(45deg);
-    border-radius: 3px;
+    border-radius: 0;
 }
 
 .rs-shape.color-red {
@@ -110,9 +109,8 @@
 .rs-bin {
     width: 120px;
     min-height: 140px;
-    background: var(--bg-secondary);
-    border: 2px dashed rgba(255, 255, 255, 0.12);
-    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    border: 2px dashed var(--border-color);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -126,37 +124,41 @@
 
 .rs-bin:hover {
     border-color: var(--accent-primary);
-    background: var(--bg-surface-hover);
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-glow);
+    border-style: solid;
+    background: var(--accent-yellow);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 0 var(--border-color);
 }
 
 .rs-bin.selected {
     border-color: var(--accent-primary);
     border-style: solid;
-    background: rgba(108, 92, 231, 0.1);
+    background: rgba(79, 70, 229, 0.1);
+    box-shadow: 4px 4px 0 0 var(--accent-primary);
 }
 
 .rs-bin-label {
     font-size: var(--font-size-xs);
     color: var(--text-muted);
     margin-top: var(--space-xs);
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* ── Streak Meter ──────────────────────────────────────── */
 .rs-streak-meter {
     width: 200px;
-    height: 6px;
-    background: var(--bg-surface);
-    border-radius: 3px;
+    height: 10px;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
     margin: var(--space-md) auto;
     overflow: hidden;
 }
 
 .rs-streak-fill {
     height: 100%;
-    background: var(--grad-cool);
-    border-radius: 3px;
+    background: var(--accent-yellow);
     transition: width 0.3s ease;
 }
 
@@ -172,8 +174,8 @@
 }
 
 .rs-stats .stat-val {
-    color: var(--accent-secondary);
-    font-weight: 600;
+    color: var(--accent-primary);
+    font-weight: 700;
 }
 
 /* ── Timer ─────────────────────────────────────────────── */
@@ -182,7 +184,7 @@
     font-family: var(--font-mono);
     font-size: var(--font-size-xl);
     font-weight: 700;
-    color: var(--accent-secondary);
+    color: var(--accent-primary);
     margin-bottom: var(--space-md);
 }
 
