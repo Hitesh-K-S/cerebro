@@ -1,20 +1,21 @@
 /* ============================================================
    Cerebro — Pattern Recall Game Styles
-   Grid, tiles, flash animations, feedback states
+   Neo-Brutalist: Grid, tiles, flash animations, feedback
    ============================================================ */
 
 /* ── Grid Container ────────────────────────────────────── */
 .pattern-grid {
     display: grid;
-    gap: 8px;
-    padding: var(--space-lg);
-    border-radius: var(--radius-lg);
+    gap: 6px;
+    padding: var(--space-md);
     background: var(--bg-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    border: var(--border);
     box-shadow: var(--shadow-md);
     width: fit-content;
     margin: 0 auto;
     transition: opacity var(--transition-normal);
+    position: relative;
+    z-index: 1;
 }
 
 /* Grid size variants (set by JS) */
@@ -37,8 +38,7 @@
 .tile {
     aspect-ratio: 1;
     background: var(--bg-surface);
-    border: 2px solid rgba(255, 255, 255, 0.06);
-    border-radius: var(--radius-md);
+    border: 2px solid var(--border-color);
     cursor: pointer;
     transition: all var(--transition-fast);
     position: relative;
@@ -47,28 +47,15 @@
     min-height: 60px;
 }
 
-/* Inner glow layer */
-.tile::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(circle at center, rgba(108, 92, 231, 0.3) 0%, transparent 70%);
-    opacity: 0;
-    transition: opacity var(--transition-fast);
-}
-
 .tile:hover:not(.disabled) {
-    border-color: rgba(108, 92, 231, 0.4);
-    transform: scale(1.03);
-}
-
-.tile:hover:not(.disabled)::before {
-    opacity: 0.3;
+    background: var(--bg-surface-hover);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 0 var(--border-color);
 }
 
 .tile:active:not(.disabled) {
-    transform: scale(0.96);
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 var(--border-color);
 }
 
 /* ── Tile States ───────────────────────────────────────── */
@@ -76,44 +63,38 @@
 /* Flashing (sequence showing) */
 .tile.flash {
     background: var(--accent-primary);
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 24px var(--accent-primary-glow),
-        inset 0 0 20px rgba(255, 255, 255, 0.15);
-    transform: scale(1.05);
-}
-
-.tile.flash::before {
-    opacity: 1;
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.25) 0%, transparent 60%);
+    border-color: var(--border-color);
+    box-shadow: 4px 4px 0 0 var(--border-color);
+    transform: translate(-2px, -2px);
 }
 
 /* Player tapped */
 .tile.tapped {
-    background: rgba(108, 92, 231, 0.4);
+    background: rgba(79, 70, 229, 0.3);
     border-color: var(--accent-primary);
-    transform: scale(0.96);
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 0 var(--border-color);
 }
 
 /* Correct feedback */
 .tile.correct {
     background: var(--accent-success);
-    border-color: var(--accent-success);
-    box-shadow: 0 0 20px rgba(0, 184, 148, 0.4);
+    border-color: var(--border-color);
+    box-shadow: 4px 4px 0 0 var(--border-color);
     animation: tileCorrectPulse 0.4s ease;
 }
 
 /* Wrong feedback */
 .tile.wrong {
     background: var(--accent-danger);
-    border-color: var(--accent-danger);
-    box-shadow: 0 0 20px rgba(225, 112, 85, 0.4);
+    border-color: var(--border-color);
     animation: tileWrongShake 0.5s ease;
 }
 
-/* Disabled state (during sequence showing or game over) */
+/* Disabled state */
 .tile.disabled {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 /* ── Tile Animations ───────────────────────────────────── */
@@ -264,19 +245,27 @@
 @keyframes roundCompleteWave {
     0% {
         background: var(--bg-surface);
-        border-color: rgba(255, 255, 255, 0.06);
+        border-color: var(--border-color);
     }
 
     50% {
         background: var(--accent-success);
-        border-color: var(--accent-success);
-        box-shadow: 0 0 12px rgba(0, 184, 148, 0.3);
+        border-color: var(--border-color);
+        box-shadow: 4px 4px 0 0 var(--border-color);
     }
 
     100% {
         background: var(--bg-surface);
-        border-color: rgba(255, 255, 255, 0.06);
+        border-color: var(--border-color);
     }
+}
+
+/* ── Keyboard Focus ─────────────────────────────────────── */
+.tile.keyboard-focused {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    box-shadow: 4px 4px 0 0 var(--primary);
+    transform: translate(-2px, -2px);
 }
 
 /* ── Score Popup (inline) ──────────────────────────────── */
@@ -288,11 +277,11 @@
     font-family: var(--font-mono);
     font-weight: 700;
     font-size: var(--font-size-xl);
-    color: var(--accent-gold);
+    color: var(--accent-yellow);
     pointer-events: none;
     animation: scorePopup 1s ease forwards;
     z-index: 50;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 0 var(--border-color);
 }
 
 @keyframes scorePopup {
@@ -320,8 +309,8 @@
     }
 
     .pattern-grid {
-        gap: 6px;
-        padding: var(--space-md);
+        gap: 4px;
+        padding: var(--space-sm);
     }
 
     .pattern-grid.grid-5 {

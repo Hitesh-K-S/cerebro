@@ -1,6 +1,6 @@
 /* ============================================================
    Cerebro — Signal Hunter Game Styles
-   Visual search / selective attention
+   Neo-Brutalist: Visual search / selective attention
    ============================================================ */
 
 /* ── Symbol Field ──────────────────────────────────────── */
@@ -9,9 +9,9 @@
     width: min(600px, 90vw);
     height: min(500px, 70vh);
     margin: 0 auto;
-    background: var(--bg-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    border-radius: var(--radius-lg);
+    background: var(--bg-surface);
+    border: var(--border);
+    box-shadow: var(--shadow-md);
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
@@ -30,19 +30,19 @@
     font-family: var(--font-mono);
     color: var(--text-secondary);
     cursor: pointer;
-    border-radius: var(--radius-sm);
     transition: all var(--transition-fast);
     user-select: none;
 }
 
 .signal-symbol:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--accent-yellow);
+    color: var(--text-primary);
     transform: scale(1.15);
 }
 
 .signal-symbol.found {
     color: var(--accent-success);
-    background: rgba(0, 184, 148, 0.15);
+    background: rgba(16, 185, 129, 0.15);
     border: 2px solid var(--accent-success);
     pointer-events: none;
     animation: symbolFound 0.3s ease;
@@ -58,6 +58,15 @@
     background: rgba(253, 121, 168, 0.15);
     border: 2px solid var(--accent-warm);
     pointer-events: none;
+}
+
+/* ── Keyboard Focus ─────────────────────────────────────── */
+.signal-symbol.keyboard-focused {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    background: var(--accent-yellow);
+    transform: scale(1.2);
+    z-index: 5;
 }
 
 @keyframes symbolFound {
@@ -79,12 +88,16 @@
     text-align: center;
     padding: var(--space-lg);
     margin-bottom: var(--space-md);
+    background: var(--bg-surface);
+    border: var(--border);
+    box-shadow: var(--shadow-sm);
 }
 
 .target-preview .target-label {
     font-size: var(--font-size-lg);
     color: var(--text-secondary);
     margin-bottom: var(--space-sm);
+    font-family: var(--font-heading);
 }
 
 .target-preview .target-symbol {
@@ -92,7 +105,6 @@
     font-weight: 800;
     font-family: var(--font-mono);
     color: var(--accent-primary);
-    text-shadow: 0 0 20px var(--accent-primary-glow);
 }
 
 /* ── Found Counter ─────────────────────────────────────── */
@@ -114,7 +126,7 @@
     font-family: var(--font-mono);
     font-size: var(--font-size-2xl);
     font-weight: 700;
-    color: var(--accent-secondary);
+    color: var(--accent-primary);
     margin-bottom: var(--space-md);
 }
 

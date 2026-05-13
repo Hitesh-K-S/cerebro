@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cerebro - Interactive Cognition</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#fbf9f1",
+                        "primary": "#366758",
+                        "primary-container": "#b5ead7",
+                        "on-surface": "#1b1c17",
+                        "on-surface-variant": "#404945",
+                        "surface-container-low": "#f5f4ec",
+                        "outline": "#707975",
+                    },
+                    "fontFamily": {
+                        "body": ["Space Grotesk", "sans-serif"],
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #fbf9f1;
+            overflow-x: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .neubrutal-shadow {
+            box-shadow: 4px 4px 0px 0px #2D2926;
+        }
+        .neubrutal-shadow-hover:hover {
+            box-shadow: 8px 8px 0px 0px #2D2926;
+            transform: translate(-4px, -4px);
+        }
+        
+        /* Interactive Grid Styles from Inspiration */
+        .grid-container {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            display: grid;
+            grid-template: repeat(var(--rows, 15), 1fr) / repeat(var(--cols, 25), 1fr);
+            pointer-events: auto;
+        }
+        .grid-item {
+            display: grid;
+            place-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--item-color, #366758);
+            opacity: var(--opacity, 0.1);
+            transition: opacity 0.8s ease-in, rotate 0.4s ease-out, filter 0.6s ease-out;
+            cursor: default;
+            user-select: none;
+            filter: grayscale(1);
+        }
+        .grid-item:hover {
+            transition-duration: 0s;
+            rotate: calc(var(--grade, 0) * 90deg);
+            filter: grayscale(0) brightness(1.2);
+            opacity: 1 !important;
+            color: #366758;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .interactive-element {
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- Top Navigation -->
+<header class="flex justify-between items-center px-6 py-4 w-full sticky top-0 z-50 bg-[#fbf9f1] border-b-2 border-[#2D2926] shadow-[4px_4px_0px_0px_rgba(45,41,38,1)]">
+<div class="text-2xl font-black text-[#2D2926] tracking-tight">Cerebro</div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="font-bold text-primary border-b-2 border-primary-container pb-1" href="#">Training</a>
+<a class="font-bold text-[#2D2926] hover:text-primary transition-colors" href="#">Archive</a>
+<a class="font-bold text-[#2D2926] hover:text-primary transition-colors" href="#">Metrics</a>
+</nav>
+<button class="bg-primary-container text-[#2D2926] border-2 border-[#2D2926] px-6 py-2 font-bold neubrutal-shadow neubrutal-shadow-hover transition-all duration-100 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none">
+            Sign In
+        </button>
+</header>
+<main class="flex-grow relative flex items-center justify-center overflow-hidden py-20">
+<!-- Interactive Grid Background -->
+<div class="grid-container" id="interactive-grid">
+<!-- Dynamically populated by JS -->
+</div>
+<!-- Hero Content Overlay -->
+<section class="hero-content max-w-4xl mx-auto px-6 text-center">
+<div class="interactive-element inline-block bg-white text-primary border-2 border-[#2D2926] px-4 py-1 font-bold text-xs tracking-widest mb-8 neubrutal-shadow uppercase">
+                Interactive Cognition Environment
+            </div>
+<h1 class="font-black text-6xl md:text-8xl mb-6 tracking-tighter text-[#2D2926] leading-[1.1]">
+                Cerebro: <span class="text-primary">Interactive</span> <br/>Cognition.
+            </h1>
+<p class="text-xl md:text-2xl mb-12 max-w-2xl mx-auto text-on-surface-variant font-medium">
+                High-performance cognitive training built for focus. Hover to engage with the neural grid.
+            </p>
+<div class="flex flex-col items-center gap-6">
+<button class="interactive-element group relative flex items-center justify-center gap-3 bg-primary-container text-[#2D2926] border-2 border-[#2D2926] px-10 py-5 text-2xl font-black rounded-lg transition-all duration-200 neubrutal-shadow hover:translate-x-[-4px] hover:translate-y-[-4px] hover:shadow-[8px_8px_0px_0px_rgba(45,41,38,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(45,41,38,1)]">
+                    Initialize Training
+                    <span class="material-symbols-outlined text-3xl font-bold">bolt</span>
+</button>
+<div class="interactive-element flex items-center gap-2 text-sm font-bold text-on-surface-variant uppercase tracking-tighter">
+<span class="material-symbols-outlined text-lg">verified_user</span>
+                    Neural Link Secure
+                </div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-8 px-8 flex flex-col md:flex-row justify-between items-center gap-4 bg-[#fbf9f1] border-t-2 border-[#2D2926] relative z-10">
+<div class="flex flex-col items-center md:items-start">
+<div class="text-lg font-black text-[#2D2926]">Cerebro</div>
+<p class="text-xs font-bold text-on-surface-variant">© 2024 CEREBRO INTERACTIVE. ALL RIGHTS RESERVED.</p>
+</div>
+<div class="flex gap-6">
+<a class="text-xs font-bold text-[#2D2926] hover:text-primary underline decoration-2 underline-offset-4" href="#">PRIVACY</a>
+<a class="text-xs font-bold text-[#2D2926] hover:text-primary underline decoration-2 underline-offset-4" href="#">TERMS</a>
+<a class="text-xs font-bold text-[#2D2926] hover:text-primary underline decoration-2 underline-offset-4" href="#">CONTACT</a>
+</div>
+</footer>
+<script>
+        const grid = document.getElementById('interactive-grid');
+        const config = {
+            cols: 25,
+            rows: 15,
+            hueBase: 160, // Mint green base
+        };
+
+        const buildGrid = () => {
+            const itemCount = config.cols * config.rows;
+            let html = '';
+            
+            for (let i = 0; i < itemCount; i++) {
+                const grade = Math.floor(Math.random() * 12 - 6);
+                const opacity = Math.random() * 0.15 + 0.05;
+                const hueOffset = Math.floor(Math.random() * 40 - 20);
+                const color = `hsl(${config.hueBase + hueOffset}, 30%, 40%)`;
+                
+                html += `
+                    <div class="grid-item" style="
+                        --grade: ${grade};
+                        --opacity: ${opacity};
+                        --item-color: ${color};
+                    ">+</div>
+                `;
+            }
+            
+            grid.innerHTML = html;
+            grid.style.setProperty('--cols', config.cols);
+            grid.style.setProperty('--rows', config.rows);
+        };
+
+        // Resize handler for responsive grid density
+        const handleResize = () => {
+            if (window.innerWidth < 768) {
+                config.cols = 12;
+                config.rows = 20;
+            } else {
+                config.cols = 25;
+                config.rows = 15;
+            }
+            buildGrid();
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Initial build
+    </script>
+</body></html>

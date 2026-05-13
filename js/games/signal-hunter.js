@@ -42,6 +42,7 @@ var SignalHunter = (function ($) {
     var fieldSymbols = [];
     var targetPositions = [];
     var foundCount = 0;
+    var keyboardIdx = 0;
     var distractorsTapped = 0;
     var roundData = [];
 
@@ -92,7 +93,7 @@ var SignalHunter = (function ($) {
         if ($custom.length === 0) {
             $custom = $('<div id="sh-container"></div>').appendTo('#game-area');
         }
-        $('#pattern-grid').hide();
+        $('#game-board').hide();
         $('#game-start-screen').addClass('hidden');
 
         $custom.html(
@@ -157,6 +158,8 @@ var SignalHunter = (function ($) {
         var diff = getDifficulty(level);
         foundCount = 0;
         distractorsTapped = 0;
+        keyboardIdx = 0;
+        $('.signal-symbol').removeClass('keyboard-focused');
         generateField(diff);
         renderField(diff);
         updateCounter(diff);
@@ -236,12 +239,14 @@ var SignalHunter = (function ($) {
         if ($sym.attr('data-target') === '1') {
             foundCount++;
             $sym.addClass('found');
+            if (window.CerebroSound) CerebroSound.correct();
             var diff = getDifficulty(level);
             updateCounter(diff);
             if (foundCount >= diff.targets) endRound(true);
         } else {
             distractorsTapped++;
             $sym.addClass('wrong-tap');
+            if (window.CerebroSound) CerebroSound.wrong();
             setTimeout(function () { $sym.removeClass('wrong-tap'); }, 400);
         }
     }
@@ -272,13 +277,33 @@ var SignalHunter = (function ($) {
         gameTimer.stop();
         var totalTargets = roundData.reduce(function (s, r) { return s + r.total; }, 0);
         var totalFound = roundData.reduce(function (s, r) { return s + r.found; }, 0);
+        var acc = totalTargets > 0 ? Math.round(totalFound / totalTargets * 100) : 0;
 
-        $('#result-score').text(score);
         $('#result-level').text(level);
         $('#result-rounds').text(totalFound + '/' + totalTargets + ' found');
         $('#result-time').text(gameTimer.getFormatted());
-        $('#modal-title').text(totalFound / totalTargets > 0.85 ? 'Sharp Eyes! 🎯' : 'Good Effort! 👀');
+        $('#result-accuracy').text(acc + '%');
+        $('#modal-title').text(acc > 85 ? 'Sharp Eyes' : 'Good Effort');
         $('#result-badge').addClass('hidden');
+        if (window.CerebroSound) CerebroSound.complete();
+        if (window.CerebroApp && CerebroApp.animateScore) {
+            CerebroApp.animateScore(score);
+        } else {
+            $('#result-score').text(score);
+        }
+        if (window.CerebroApp && CerebroApp.setTierBadge) {
+            CerebroApp.setTierBadge(score);
+        }
+        if (window.CerebroApp && CerebroApp.updatePerformanceMeters) {
+            CerebroApp.updatePerformanceMeters({
+                accuracy: acc,
+                reaction: 0,
+                streak: 0
+            });
+        }
+        if (score > 2000 && window.CerebroApp && CerebroApp.spawnConfetti) {
+            CerebroApp.spawnConfetti();
+        }
         $('#modal-gameover').removeClass('hidden');
 
         if (sessionToken) {
@@ -310,15 +335,36 @@ var SignalHunter = (function ($) {
     }
 
     function updateDisplay() {
-        $('#display-level').text('Level ' + level);
-        $('#display-round').text('Round ' + (currentRound + 1) + '/' + totalRounds);
-        $('#display-score').text('Score: ' + score);
+        $('#display-level').text('Lv.' + level);
+        $('#display-round').text('R' + (currentRound + 1) + '/' + totalRounds);
+        $('#display-score').text(score);
     }
 
     function bindEvents() {
         $(document).off('.signalhunter');
         $(document).on('click.signalhunter', '.signal-symbol', function () {
             handleSymbolClick(parseInt($(this).attr('data-idx'), 10));
+        });
+        $(document).on('keydown.signalhunter', function (e) {
+            if (state !== STATES.PLAYING) return;
+            var $symbols = $('#sh-field .signal-symbol');
+            if ($symbols.length === 0) return;
+            if (e.code === 'Tab') {
+                e.preventDefault();
+                $symbols.removeClass('keyboard-focused');
+                var dir = e.shiftKey ? -1 : 1;
+                var maxTries = $symbols.length;
+                do {
+                    keyboardIdx = (keyboardIdx + dir + $symbols.length) % $symbols.length;
+                    maxTries--;
+                } while (maxTries > 0 && $symbols.eq(keyboardIdx).hasClass('found'));
+                $symbols.eq(keyboardIdx).addClass('keyboard-focused');
+            } else if (e.code === 'Space') {
+                e.preventDefault();
+                if (!$symbols.eq(keyboardIdx).hasClass('found')) {
+                    handleSymbolClick(parseInt($symbols.eq(keyboardIdx).attr('data-idx'), 10));
+                }
+            }
         });
     }
 
@@ -328,7 +374,6 @@ var SignalHunter = (function ($) {
         clearInterval(roundTimerInterval);
         $(document).off('.signalhunter');
         $('#sh-container').remove();
-        $('#pattern-grid').show();
         state = STATES.INIT;
     }
 

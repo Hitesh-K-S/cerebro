@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cerebro - Evolve Your Brain</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#366758",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#002018",
+                        "secondary-fixed-dim": "#e3c0a8",
+                        "error-container": "#ffdad6",
+                        "inverse-on-surface": "#f3f1e9",
+                        "surface-container": "#f0eee6",
+                        "inverse-surface": "#30312c",
+                        "primary-container": "#b5ead7",
+                        "on-secondary-container": "#785d49",
+                        "outline": "#707975",
+                        "secondary": "#745945",
+                        "primary-fixed-dim": "#9dd1bf",
+                        "on-primary-container": "#396b5c",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#566246",
+                        "on-surface-variant": "#404945",
+                        "outline-variant": "#c0c9c4",
+                        "on-surface": "#1b1c17",
+                        "surface-bright": "#fbf9f1",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#141f08",
+                        "tertiary-fixed": "#dae8c3",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#b9eedb",
+                        "surface-container-highest": "#e4e3db",
+                        "on-tertiary-fixed-variant": "#3f4b30",
+                        "on-primary-fixed-variant": "#1c4f41",
+                        "on-secondary-fixed": "#2a1708",
+                        "surface-tint": "#366758",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#eae8e0",
+                        "on-tertiary-container": "#5a6649",
+                        "secondary-fixed": "#ffdcc4",
+                        "surface-dim": "#dcdad2",
+                        "surface-variant": "#e4e3db",
+                        "secondary-container": "#fdd9c0",
+                        "surface": "#fbf9f1",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#d6e4c0",
+                        "background": "#fbf9f1",
+                        "on-secondary-fixed-variant": "#5a422f",
+                        "tertiary-fixed-dim": "#becba8",
+                        "on-background": "#1b1c17",
+                        "inverse-primary": "#9dd1bf",
+                        "surface-container-low": "#f5f4ec"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "4px",
+                        "lg": "8px",
+                        "xl": "12px",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "xl": "48px",
+                        "unit": "4px",
+                        "margin": "20px",
+                        "sm": "8px",
+                        "gutter": "16px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Space Grotesk"],
+                        "h1": ["Space Grotesk"],
+                        "body-lg": ["Space Grotesk"],
+                        "h2": ["Space Grotesk"],
+                        "label-caps": ["Space Grotesk"],
+                        "button": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "button": ["16px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .pixel-shadow-sm { box-shadow: 4px 4px 0px 0px rgba(45,41,38,1); }
+        .pixel-shadow-md { box-shadow: 6px 6px 0px 0px rgba(45,41,38,1); }
+        .pixel-shadow-lg { box-shadow: 8px 8px 0px 0px rgba(45,41,38,1); }
+        .pixel-border { border: 3px solid #2D2926; }
+        .pixel-border-sm { border: 2px solid #2D2926; }
+        .sticker-hover:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px 0px rgba(45,41,38,1);
+        }
+        .sticker-active:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px rgba(45,41,38,1);
+        }
+    </style>
+</head>
+<body class="bg-[#FFFDF5] font-body-md text-on-surface selection:bg-primary-container">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-50 flex justify-between items-center px-8 py-4 w-full bg-[#FFFDF5] border-b-2 border-[#2D2926] shadow-[4px_4px_0px_0px_rgba(45,41,38,1)]">
+<div class="text-2xl font-black tracking-tighter text-[#2D2926]">Cerebro</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-['Space_Grotesk'] uppercase tracking-tight font-bold text-[#2D2926] border-b-2 border-[#B5EAD7] pb-1" href="#">Games</a>
+<a class="font-['Space_Grotesk'] uppercase tracking-tight font-bold text-[#2D2926]/60 hover:text-[#2D2926] transition-all duration-100" href="#">Science</a>
+<a class="font-['Space_Grotesk'] uppercase tracking-tight font-bold text-[#2D2926]/60 hover:text-[#2D2926] transition-all duration-100" href="#">Records</a>
+</nav>
+<button class="bg-[#B5EAD7] px-6 py-2 pixel-border-sm font-['Space_Grotesk'] uppercase tracking-tight font-bold text-[#2D2926] shadow-[4px_4px_0px_0px_rgba(45,41,38,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] transition-all duration-100">
+            Start Training
+        </button>
+</header>
+<main class="max-w-7xl mx-auto px-6">
+<!-- Hero Section -->
+<section class="flex flex-col items-center text-center pt-24 pb-20">
+<div class="relative mb-12">
+<div class="w-64 h-64 bg-white pixel-border pixel-shadow-lg flex items-center justify-center p-4">
+<img class="w-full h-full object-contain image-pixelated" data-alt="A cute high-detail pixel art brain character with a soft friendly expression and a glowing lightbulb inside on a pastel background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz2jxyuBqmH1i1kvZq_RMydp0D012-wKskXp7DO6VOyOSO0jZpsJG9uoT0KaTb9frVd-i9XTqWQTnZH7rioYJGDswYxd8quAhRJooAzHf9W3sTQWECQtUyDwK9yqIb4foXJj1D9CBd0P8Mikc95NbM9dSG-jJ7Y-Kc9NjqvcOawbMeO9RBzvsRwlTlA8PKBaYhqKh1wi1cvV96iar3SkCbZH0-WRARWow5vowPfEcpXn8XH2-k0LQoe4AmuC-XFUSfoasX3S_ppj0"/>
+</div>
+<!-- Decorative Pixel Stars -->
+<span class="material-symbols-outlined absolute -top-8 -left-8 text-secondary text-4xl" data-weight="fill">star</span>
+<span class="material-symbols-outlined absolute -bottom-4 -right-12 text-primary-container text-5xl" data-weight="fill">favorite</span>
+</div>
+<h1 class="font-h1 text-[64px] leading-tight mb-8 text-[#2D2926] tracking-tighter">
+                EVOLVE YOUR BRAIN
+            </h1>
+<p class="max-w-xl text-body-lg text-on-surface-variant mb-12">
+                A cozy ritual for your mind. Train your cognitive skills with gentle, scientifically-backed games designed for daily growth.
+            </p>
+<button class="bg-primary-container px-12 py-6 pixel-border pixel-shadow-md text-h2 uppercase tracking-tighter font-black sticker-hover sticker-active transition-all">
+                START TRAINING
+            </button>
+</section>
+<!-- Feature Section -->
+<section class="py-24 border-t-2 border-[#2D2926]/10">
+<div class="text-center mb-16">
+<h2 class="font-h1 text-4xl mb-4">The Science of Kindness to your Mind</h2>
+<p class="text-body-lg text-on-surface-variant">Harnessing neuroplasticity through daily playful practice.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+<!-- Card 1 -->
+<div class="bg-[#B5EAD7] p-8 pixel-border pixel-shadow-md sticker-hover transition-all">
+<div class="w-16 h-16 bg-white pixel-border-sm mb-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl text-primary" data-icon="water_drop">water_drop</span>
+</div>
+<h3 class="font-h2 text-xl mb-3">Mental Hydration</h3>
+<p class="text-body-md text-on-surface-variant">Daily exercises act like watering a garden, keeping your neural pathways fresh and resilient.</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-[#FFDAC1] p-8 pixel-border pixel-shadow-md sticker-hover transition-all">
+<div class="w-16 h-16 bg-white pixel-border-sm mb-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl text-secondary" data-icon="extension">extension</span>
+</div>
+<h3 class="font-h2 text-xl mb-3">Synaptic Bonding</h3>
+<p class="text-body-md text-on-surface-variant">Strengthen connections between logic and creativity with cross-disciplinary challenges.</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-[#E2F0CB] p-8 pixel-border pixel-shadow-md sticker-hover transition-all">
+<div class="w-16 h-16 bg-white pixel-border-sm mb-6 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl text-tertiary" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<h3 class="font-h2 text-xl mb-3">Cognitive Bloom</h3>
+<p class="text-body-md text-on-surface-variant">Experience the subtle shift in focus and clarity as you nurture your brain's natural plasticity.</p>
+</div>
+</div>
+</section>
+<!-- Games Gallery -->
+<section class="py-24">
+<div class="flex justify-between items-end mb-12">
+<div>
+<span class="font-label-caps text-secondary mb-2 block">DAILY SELECTION</span>
+<h2 class="font-h1 text-4xl">Games Gallery</h2>
+</div>
+<button class="px-6 py-2 font-button underline hover:text-primary transition-colors">View All Games</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Game 1 -->
+<div class="group relative bg-white pixel-border pixel-shadow-md hover:translate-y-[-4px] transition-transform">
+<div class="h-48 overflow-hidden border-b-2 border-[#2D2926]">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" data-alt="Retro pixel art puzzle interface with colorful blocks and a cozy game character" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8b0o6Uu1PVnZ1yQ3I4UTarupV5gZCWWXBIckIA3hIxqZs8k5YQJH0OzY5HsQnh_a6lhA1JipjFWW7Simewq1r_Ta-RpykqZqURlePGIKz_wtZSdoM4JT7Ub9mqk2Z0KbaIZ4JEBcSEMQ1i2H8PF0oPxmeYsTni4GRAgFzt13wU3y6uGO9W-G6_ezdcoJ1lpasZ6IpIFnFRxPzl4ujh4KFqWQyZZ6OU5ppZ2dDiDbpS-DCKAQMTphEj7wB5fX6TvjSCCcHTLZxpXU"/>
+</div>
+<div class="p-6">
+<h4 class="font-h2 text-xl mb-2">Memory Matrix</h4>
+<p class="text-body-md text-on-surface-variant mb-6">Master spatial recognition and pattern recall.</p>
+<div class="flex justify-between items-center">
+<span class="px-3 py-1 bg-surface-container pixel-border-sm text-xs font-bold uppercase">EASY</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform" data-icon="play_circle" data-weight="fill">play_circle</span>
+</div>
+</div>
+</div>
+<!-- Game 2 -->
+<div class="group relative bg-white pixel-border pixel-shadow-md hover:translate-y-[-4px] transition-transform">
+<div class="h-48 overflow-hidden border-b-2 border-[#2D2926]">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" data-alt="Digital representation of connected nodes in a pixel art style, light pastel blue and lavender colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKaKtlX7io2-mRnYFAJ03d7Wr1bT0hcv-S3wTRzPUiiIoNMaGUD62OmPqDehsgAEVBSYQAE-_q44DgVL_2RObf94uC4j9w-elmS08tsZZhXdZNzNmQB4UN42lQFdk5hyWPYsYQrlAGtUtPAR-qNK5Wp9r9MU4ZipIvkTwA9fPfWSuKQr07wCUYUIcZUubll5FP-2QdFIXm4uNGtpBMg4br3fygIb4ed_xXaGeOKHLly4cTDJwn03MjoSgnU15IKPloo-aS-2mCHtc"/>
+</div>
+<div class="p-6">
+<h4 class="font-h2 text-xl mb-2">Logic Link</h4>
+<p class="text-body-md text-on-surface-variant mb-6">Build complex pathways of deductive reasoning.</p>
+<div class="flex justify-between items-center">
+<span class="px-3 py-1 bg-secondary-container pixel-border-sm text-xs font-bold uppercase">MEDIUM</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform" data-icon="play_circle" data-weight="fill">play_circle</span>
+</div>
+</div>
+</div>
+<!-- Game 3 -->
+<div class="group relative bg-white pixel-border pixel-shadow-md hover:translate-y-[-4px] transition-transform">
+<div class="h-48 overflow-hidden border-b-2 border-[#2D2926]">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" data-alt="Fast-paced pixel graphics showing a small running creature against a colorful sunset background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfV8-j2Sg3Gu7u_qqpGEhJIPNFrBcsR-dMmhNL-oweH_F0v3EdTGVhSH8g3fXgHOpZFHymKWgT1qxYhzFiY6oYcONhsOz95tU6P_C5A8mh2O9Vl1bZyz7Gplg5wlqlVmvxfSW7G8K3prBw27pCmiX4AJlhxb9L4s0aGrteW_iKfIi2_sDL2BecE5nPk-X-k4IGTjG6jssdoMofAvhpvUYXvOnJALm6JiIR7Uq7s0FYILiMhQS83ienL18x9jqirfR39Yro5jHuOIc"/>
+</div>
+<div class="p-6">
+<h4 class="font-h2 text-xl mb-2">Speed Sprinter</h4>
+<p class="text-body-md text-on-surface-variant mb-6">Sharpen reaction times and mental agility.</p>
+<div class="flex justify-between items-center">
+<span class="px-3 py-1 bg-tertiary-container pixel-border-sm text-xs font-bold uppercase">HARD</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:scale-110 transition-transform" data-icon="play_circle" data-weight="fill">play_circle</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Leaderboard -->
+<section class="py-24 max-w-3xl mx-auto">
+<div class="bg-white pixel-border pixel-shadow-lg p-10">
+<div class="flex items-center gap-4 mb-10">
+<span class="material-symbols-outlined text-4xl text-[#2D2926]" data-icon="emoji_events">emoji_events</span>
+<h2 class="font-h1 text-4xl">Friendy Rankings</h2>
+</div>
+<div class="space-y-4">
+<!-- Rank Item -->
+<div class="flex items-center justify-between p-4 bg-surface-container-low pixel-border-sm hover:translate-x-2 transition-transform cursor-default">
+<div class="flex items-center gap-6">
+<span class="font-black text-xl w-6">1</span>
+<div class="w-12 h-12 bg-[#B5EAD7] pixel-border-sm flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover image-pixelated" data-alt="Small pixel art avatar of a smiling man with brown hair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAnz1GbN01TgrD3-CRQq2Q3VEzfz1QRi33k7px6CKe-5A_CYBCsnwaOz9o1VCfglv6Kxq9ybi_7LVYaDvaeqJLBkm_-UR3OBvrqQF7LJAoGkjr3ZequMTAVHUZWlu03XQWcGmalL-cgL2pu8Z2j7kJNt6SdnwUhYJjQ7kbsw1y_14Q9aRB7o_v_O71jQPS500at1hslNe1XUDPKZBSSsByguWxErIN2MltDPgS6Z3MuJmJbAKCv9zb73NN4ZvtzOxlOadEyfXFwx8"/>
+</div>
+<span class="font-bold text-lg">PixelPete</span>
+</div>
+<div class="text-right">
+<span class="font-black text-xl text-primary">12,450</span>
+<span class="block text-[10px] font-bold uppercase text-on-surface-variant">XP GAINED</span>
+</div>
+</div>
+<!-- Rank Item -->
+<div class="flex items-center justify-between p-4 bg-white pixel-border-sm hover:translate-x-2 transition-transform cursor-default">
+<div class="flex items-center gap-6">
+<span class="font-black text-xl w-6">2</span>
+<div class="w-12 h-12 bg-[#FFDAC1] pixel-border-sm flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover image-pixelated" data-alt="Small pixel art avatar of a woman with purple hair and glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAitmVXlQ2-WQ2VhHd49kq-PMQQC4TzaFF5GqopfofPKDfIXaMzwU8_e5Mioc2Vybfm3pGLgwO0yILUi3r7mTpBuT7jb2_fG0VB4ptAuKyHeB7qN-rIqJtxfOmRgjW-ITqmZf5-XHJgM0R18taV6EsR5GByqIodalRct4zo4-msfJWn-tPbv88oH7Eq8h9vBPM1n50C3kc4y2khnUFbuC2Pxr2qaW5nMiLJoImk4Y8AkdjvRWdssjSUgxHsi1ERk-GniiVVswGo3tw"/>
+</div>
+<span class="font-bold text-lg">LogicLulu</span>
+</div>
+<div class="text-right">
+<span class="font-black text-xl text-primary">11,920</span>
+<span class="block text-[10px] font-bold uppercase text-on-surface-variant">XP GAINED</span>
+</div>
+</div>
+<!-- Rank Item -->
+<div class="flex items-center justify-between p-4 bg-white pixel-border-sm hover:translate-x-2 transition-transform cursor-default">
+<div class="flex items-center gap-6">
+<span class="font-black text-xl w-6">3</span>
+<div class="w-12 h-12 bg-[#E2F0CB] pixel-border-sm flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover image-pixelated" data-alt="Small pixel art avatar of a young man with a beanie" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRAXzPdYqXzNOMId-MBdDtXeSAvDo97_7wGLwGCUurwD72pV9xpSrsK_6R9Rvr9343eHpyBQPgcW_6K9xpPSB0NWw0jo-Pwls4Ni-sBQVrKgDuuQrkH4uCIHrdJcc2f11Qp7VLRy4SSML_owgHqhXaJ034onuidR_wrI9sA_t-BmQGB820KWIc1hHALgFwm3JTfcZqU8KOs0oNTQ0CV1CtFinEudsiZh2DWNqGSgG4FsoW-pECWoYWVda52igkOLxZ_J0k5NcI4W0"/>
+</div>
+<span class="font-bold text-lg">BrainyBen</span>
+</div>
+<div class="text-right">
+<span class="font-black text-xl text-primary">10,105</span>
+<span class="block text-[10px] font-bold uppercase text-on-surface-variant">XP GAINED</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-10 py-4 bg-[#B5EAD7] pixel-border-sm font-bold uppercase tracking-widest hover:bg-primary hover:text-white transition-colors">
+                    Join the Leaderboard
+                </button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t-2 border-[#2D2926] mt-20 bg-[#FFFDF5] dark:bg-[#1a1918]">
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 px-12 py-10 w-full">
+<div class="font-black text-lg text-[#2D2926] dark:text-[#B5EAD7]">Cerebro</div>
+<div class="font-['Space_Grotesk'] text-sm font-medium text-[#2D2926]/70 dark:text-[#FFFDF5]/70">
+                © 2024 Cerebro. A cozy ritual for your mind.
+            </div>
+<div class="flex gap-8">
+<a class="font-['Space_Grotesk'] text-sm font-medium text-[#2D2926]/70 hover:text-[#B5EAD7] transition-colors" href="#">Privacy</a>
+<a class="font-['Space_Grotesk'] text-sm font-medium text-[#2D2926]/70 hover:text-[#B5EAD7] transition-colors" href="#">Terms</a>
+<a class="font-['Space_Grotesk'] text-sm font-medium text-[#2D2926]/70 hover:text-[#B5EAD7] transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>
