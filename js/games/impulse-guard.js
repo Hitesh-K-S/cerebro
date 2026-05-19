@@ -340,7 +340,7 @@ var ImpulseGuard = (function ($) {
         $('#modal-gameover').removeClass('hidden');
 
         if (sessionToken) {
-            CerebroAPI.post('/game/end', {
+            var payload = {
                 token: sessionToken, score: score, level_reached: level,
                 duration_ms: gameTimer.getElapsedMs(),
                 replay: {
@@ -350,7 +350,10 @@ var ImpulseGuard = (function ($) {
                         time_ms: gameTimer.getElapsedMs()
                     }]
                 }
-            }).fail(function () { });
+            };
+            CerebroAPI.post('/game/end', payload).fail(function () {
+                CerebroAPI.queueForRetry('POST', '/game/end', payload);
+            });
         }
     }
 

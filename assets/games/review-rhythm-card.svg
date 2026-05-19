@@ -1,0 +1,20 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="40" fill="#EFF6FF"/>
+  <rect x="86" y="92" width="1028" height="616" rx="34" fill="#FFFFFF" stroke="#BFDBFE" stroke-width="8"/>
+  <text x="112" y="160" fill="#1D4ED8" font-family="Space Grotesk, sans-serif" font-size="56" font-weight="700">Review Rhythm</text>
+  <rect x="130" y="214" width="260" height="140" rx="24" fill="#DBEAFE"/>
+  <rect x="130" y="390" width="260" height="140" rx="24" fill="#93C5FD"/>
+  <rect x="130" y="566" width="260" height="88" rx="22" fill="#1D4ED8"/>
+  <rect x="458" y="214" width="560" height="440" rx="32" fill="url(#paint0_linear)"/>
+  <rect x="514" y="276" width="448" height="104" rx="22" fill="#FFFFFF" fill-opacity="0.9"/>
+  <rect x="514" y="414" width="200" height="96" rx="22" fill="#FFFFFF" fill-opacity="0.9"/>
+  <rect x="762" y="414" width="200" height="96" rx="22" fill="#FFFFFF" fill-opacity="0.7"/>
+  <rect x="514" y="540" width="200" height="96" rx="22" fill="#FFFFFF" fill-opacity="0.7"/>
+  <rect x="762" y="540" width="200" height="96" rx="22" fill="#FFFFFF" fill-opacity="0.9"/>
+  <defs>
+    <linearGradient id="paint0_linear" x1="458" y1="214" x2="1018" y2="654" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#60A5FA"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,26 @@
+/* Mental Stack */
+
+.ms-study {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.ms-list {
+    margin: 14px 0 0;
+    padding-left: 20px;
+    color: rgba(16, 24, 40, 0.82);
+    line-height: 1.65;
+}
+
+.ms-recall {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ms-feedback-card h3 {
+    margin: 14px 0 0;
+    font-size: 1.2rem;
+    line-height: 1.5;
+}

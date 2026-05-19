@@ -31,6 +31,13 @@
     <link rel="stylesheet" href="css/games/word-grid.css">
     <link rel="stylesheet" href="css/games/flanker-task.css">
     <link rel="stylesheet" href="css/games/syllogisms.css">
+    <link rel="stylesheet" href="css/games/fact-loop.css">
+    <link rel="stylesheet" href="css/games/memory-chain.css">
+    <link rel="stylesheet" href="css/games/review-rhythm.css">
+    <link rel="stylesheet" href="css/games/sequence-recall.css">
+    <link rel="stylesheet" href="css/games/chunking-game.css">
+    <link rel="stylesheet" href="css/games/mental-stack.css">
+    <link rel="stylesheet" href="css/games/attention-control.css">
 </head>
 
 <body>
@@ -47,7 +54,7 @@
                 <button class="nav-btn active" data-view="dashboard">Training</button>
                 <button class="nav-btn" data-view="games">Archive</button>
                 <button class="nav-btn" data-view="leaderboard">Metrics</button>
-                <button class="nav-btn" data-view="stats">Stats</button>
+                <button class="nav-btn needs-auth" data-view="stats">Stats</button>
             </nav>
             <div class="user-info" id="user-session-controls">
                 <button class="header-signin-btn" type="button">Sign In</button>
@@ -220,6 +227,53 @@
                     <h3>Personal Bests</h3>
                     <div class="stats-game-grid" id="stats-games"></div>
                 </div>
+                <div class="stats-section">
+                    <h3>Recent Sessions</h3>
+                    <div class="stats-session-list" id="stats-sessions"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Profile ────────────────────────────────── -->
+        <section id="view-profile" class="view">
+            <div class="view-header">
+                <h2>Profile</h2>
+                <p class="view-subtitle">Manage your account details.</p>
+            </div>
+            <div class="profile-layout">
+                <div class="profile-card">
+                    <div class="profile-card-header">
+                        <span class="profile-avatar" id="profile-avatar"></span>
+                        <div>
+                            <h3 id="profile-display-name"></h3>
+                            <span class="profile-email" id="profile-email"></span>
+                        </div>
+                    </div>
+                    <div class="profile-field">
+                        <label for="profile-username-input">Username</label>
+                        <div class="profile-input-row">
+                            <input id="profile-username-input" class="profile-input" type="text" maxlength="24" minlength="3" pattern="[a-zA-Z0-9_]+" autocomplete="off" spellcheck="false">
+                            <button id="profile-save-btn" class="btn btn-primary" type="button">Save</button>
+                        </div>
+                        <p class="profile-hint">3–24 characters: letters, numbers, and underscores.</p>
+                        <p id="profile-message" class="profile-message hidden"></p>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <h3>Account</h3>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Auth Provider</span>
+                        <span class="profile-info-value" id="profile-auth-provider">Google</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Member Since</span>
+                        <span class="profile-info-value" id="profile-member-since">—</span>
+                    </div>
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">Total Sessions</span>
+                        <span class="profile-info-value" id="profile-total-sessions">—</span>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -330,6 +384,13 @@
                             <option value="digit-juggler">Digit Juggler</option>
                             <option value="signal-hunter">Signal Hunter</option>
                             <option value="word-grid">Word Grid</option>
+                            <option value="fact-loop">Fact Loop</option>
+                            <option value="memory-chain">Memory Chain</option>
+                            <option value="review-rhythm">Review Rhythm</option>
+                            <option value="sequence-recall">Sequence Recall</option>
+                            <option value="chunking-game">Chunking Game</option>
+                            <option value="mental-stack">Mental Stack</option>
+                            <option value="attention-control">Attention Control</option>
                             <option value="flanker-task">Flanker Task</option>
                             <option value="syllogisms">Syllogisms</option>
                             <option value="rule-shifter">Rule Shifter</option>
@@ -457,6 +518,7 @@
     <script src="js/utils/sound.js"></script>
     <script src="js/hero-scene.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/games/memory-content.js"></script>
     <script src="js/games/pattern-recall.js"></script>
     <script src="js/games/digit-juggler.js"></script>
     <script src="js/games/signal-hunter.js"></script>
@@ -467,6 +529,13 @@
     <script src="js/games/word-grid.js"></script>
     <script src="js/games/flanker-task.js"></script>
     <script src="js/games/syllogisms.js"></script>
+    <script src="js/games/fact-loop.js"></script>
+    <script src="js/games/memory-chain.js"></script>
+    <script src="js/games/review-rhythm.js"></script>
+    <script src="js/games/sequence-recall.js"></script>
+    <script src="js/games/chunking-game.js"></script>
+    <script src="js/games/mental-stack.js"></script>
+    <script src="js/games/attention-control.js"></script>
     <script src="js/app.js"></script>
 </body>
 

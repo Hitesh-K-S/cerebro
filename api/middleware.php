@@ -102,7 +102,7 @@ function getAuthenticatedUser(): ?array
     }
 
     return Database::fetchOne(
-        'SELECT id, username, email, display_name, avatar_url, auth_provider
+        'SELECT id, username, email, display_name, avatar_url, auth_provider, created_at
          FROM users
          WHERE id = ?',
         [$userId]
@@ -136,22 +136,35 @@ function generateSessionToken(): string
  * Validate a game session token.
  * Returns the session row or sends an error response.
  */
-function validateSession(string $token): array
+function findSessionByToken(string $token): ?array
 {
     if (strlen($token) !== SESSION_TOKEN_LENGTH) {
         jsonError('Invalid session token format.', 401);
     }
 
-    $session = Database::fetchOne(
+    return Database::fetchOne(
         'SELECT gs.*, g.slug as game_slug 
          FROM game_sessions gs 
          JOIN games g ON g.id = gs.game_id 
-         WHERE gs.token = ? AND gs.completed = 0',
+         WHERE gs.token = ?',
         [$token]
     );
+}
+
+function validateSession(string $token, ?int $userId = null): array
+{
+    $session = findSessionByToken($token);
 
     if (!$session) {
         jsonError('Invalid or expired session token.', 401);
+    }
+
+    if ($userId !== null && (int) $session['user_id'] !== $userId) {
+        jsonError('This session does not belong to the authenticated user.', 403);
+    }
+
+    if ((int) $session['completed'] === 1) {
+        jsonError('This session is already closed.', 409);
     }
 
     return $session;
@@ -160,10 +173,23 @@ function validateSession(string $token): array
 /**
  * Mark a session as completed.
  */
-function completeSession(int $sessionId): void
+function completeSession(int $sessionId, string $reason = 'completed'): void
 {
     Database::query(
-        'UPDATE game_sessions SET completed = 1, completed_at = NOW() WHERE id = ?',
+        'UPDATE game_sessions
+         SET completed = 1,
+             ended_reason = ?,
+             completed_at = NOW(),
+             last_activity_at = NOW()
+         WHERE id = ?',
+        [$reason, $sessionId]
+    );
+}
+
+function touchSession(int $sessionId): void
+{
+    Database::query(
+        'UPDATE game_sessions SET last_activity_at = NOW() WHERE id = ?',
         [$sessionId]
     );
 }
@@ -228,25 +254,33 @@ function validateReplay(array $replay, int $claimedScore, int $durationMs): ?str
         return 'Missing or invalid replay rounds.';
     }
 
+    if (count($replay['rounds']) === 0) {
+        return 'Replay is empty.';
+    }
+
     $totalTiles = 0;
     foreach ($replay['rounds'] as $round) {
-        if (!isset($round['sequence'], $round['input'], $round['time_ms'])) {
+        if (!is_array($round) || !isset($round['time_ms'])) {
             return 'Incomplete round data in replay.';
         }
 
-        // Verify the input matches the sequence
-        if ($round['sequence'] !== $round['input']) {
-            // Last round can be a failed attempt
-            if ($round !== end($replay['rounds'])) {
-                return 'Replay sequence mismatch in non-final round.';
-            }
+        if (isset($round['sequence']) && !is_array($round['sequence'])) {
+            return 'Replay sequence format is invalid.';
         }
 
-        $totalTiles += count($round['sequence']);
+        if (isset($round['input']) && !is_array($round['input'])) {
+            return 'Replay input format is invalid.';
+        }
+
+        $sequence = isset($round['sequence']) ? $round['sequence'] : [];
+        $input = isset($round['input']) ? $round['input'] : [];
+        $interactionSize = max(count($sequence), count($input), 1);
+
+        $totalTiles += $interactionSize;
 
         // Check timing plausibility
-        $minTimeForRound = count($round['sequence']) * MIN_REACTION_MS_PER_TILE;
-        if ($round['time_ms'] < $minTimeForRound) {
+        $minTimeForRound = $interactionSize * MIN_REACTION_MS_PER_TILE;
+        if ($round['time_ms'] > 0 && $round['time_ms'] < $minTimeForRound) {
             return 'Implausibly fast reaction time detected.';
         }
     }

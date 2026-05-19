@@ -313,12 +313,13 @@ var Syllogisms = (function ($) {
         $('#modal-gameover').removeClass('hidden');
 
         if (sessionToken) {
-            CerebroAPI.post('/game/end', {
+            var payload = {
                 token: sessionToken, score: score, level_reached: level,
                 duration_ms: gameTimer.getElapsedMs(),
                 replay: { rounds: trialData.map(function (t) { return { sequence: [], input: [t.correct ? 1 : 0], time_ms: 0 }; }) },
                 accuracy: acc
-            }).fail(function () { CerebroAPI.queueForRetry('POST', '/game/end', { token: sessionToken, score: score }); });
+            };
+            CerebroAPI.post('/game/end', payload).fail(function () { CerebroAPI.queueForRetry('POST', '/game/end', payload); });
         }
     }
 

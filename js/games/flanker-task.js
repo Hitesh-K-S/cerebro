@@ -281,12 +281,13 @@ var FlankerTask = (function ($) {
         $('#modal-gameover').removeClass('hidden');
 
         if (sessionToken) {
-            CerebroAPI.post('/game/end', {
+            var payload = {
                 token: sessionToken, score: score, level_reached: level,
                 duration_ms: gameTimer.getElapsedMs(),
                 replay: { rounds: trialData.map(function (t) { return { sequence: [t.center + (t.congruent ? '_cong' : '_incong')], input: [t.correct ? 1 : 0], time_ms: t.reaction_ms }; }) },
                 accuracy: acc
-            }).fail(function () { CerebroAPI.queueForRetry('POST', '/game/end', { token: sessionToken, score: score }); });
+            };
+            CerebroAPI.post('/game/end', payload).fail(function () { CerebroAPI.queueForRetry('POST', '/game/end', payload); });
         }
     }
 

@@ -31,8 +31,16 @@ var CerebroAuth = (function ($) {
             clearNotice();
         });
 
+        $(document).on('click', '#profile-trigger', function () {
+            openProfile();
+        });
+
         $(document).on('click', '#auth-signout-btn', function () {
             logout();
+        });
+
+        $(document).on('click', '#profile-save-btn', function () {
+            saveUsername();
         });
     }
 
@@ -95,7 +103,6 @@ var CerebroAuth = (function ($) {
         );
 
         googleInitialized = true;
-        $('#google-signin-button').attr('aria-hidden', 'true');
     }
 
     function triggerGoogleSignIn() {
@@ -111,7 +118,12 @@ var CerebroAuth = (function ($) {
         }
 
         showNotice('Choose your Google account to continue.');
-        google.accounts.id.prompt();
+        var $gsiButton = $('#google-signin-button [tabindex]');
+        if ($gsiButton.length) {
+            $gsiButton[0].click();
+        } else {
+            google.accounts.id.prompt();
+        }
     }
 
     function handleGoogleCredential(response) {
@@ -139,6 +151,8 @@ var CerebroAuth = (function ($) {
     }
 
     function renderHeaderState() {
+        $('body').toggleClass('authenticated', !!currentUser);
+
         var $controls = $('#user-session-controls');
         if ($controls.length === 0) {
             return;
@@ -149,19 +163,11 @@ var CerebroAuth = (function ($) {
             return;
         }
 
-        var displayName = escapeHtml(currentUser.display_name || currentUser.username || 'Cerebro User');
-        var email = escapeHtml(currentUser.email || '');
-        var avatarMarkup = currentUser.avatar_url
-            ? '<img class="user-avatar" src="' + escapeHtml(currentUser.avatar_url) + '" alt="' + displayName + ' avatar">'
-            : '<div class="user-avatar user-avatar-fallback">' + displayName.charAt(0).toUpperCase() + '</div>';
+        var username = escapeHtml(currentUser.username || 'Cerebro User');
 
         $controls.html(
-            '<div class="user-session">' +
-                avatarMarkup +
-                '<div class="user-copy">' +
-                    '<strong>' + displayName + '</strong>' +
-                    '<span>' + email + '</span>' +
-                '</div>' +
+            '<div class="user-session" tabindex="0" role="button" id="profile-trigger">' +
+                '<span class="user-username">' + username + '</span>' +
             '</div>' +
             '<button id="auth-signout-btn" class="header-session-btn" type="button">Sign Out</button>'
         );
@@ -169,13 +175,89 @@ var CerebroAuth = (function ($) {
 
     function syncAuthView() {
         if (currentUser) {
-            $('.auth-panel-copy').text('Signed in as ' + (currentUser.display_name || currentUser.username || currentUser.email || 'your Google account') + '. You can return to training or switch accounts from your browser session.');
+            $('.auth-panel-copy').text('Signed in as ' + (currentUser.username || escapeHtml(currentUser.email || 'your Google account')) + '. You can return to training or switch accounts from your browser session.');
             $('#auth-back-btn').text('Return to Training');
             return;
         }
 
         $('.auth-panel-copy').text('Choose the Google account you want to use for Cerebro.');
         $('#auth-back-btn').text('Back to Landing Page');
+    }
+
+    function openProfile() {
+        if (!currentUser) {
+            return;
+        }
+
+        loadProfile();
+
+        if (window.CerebroApp) {
+            CerebroApp.showView('profile');
+        }
+    }
+
+    function loadProfile() {
+        if (!currentUser) {
+            return;
+        }
+
+        var name = escapeHtml(currentUser.display_name || currentUser.username || '');
+        var email = escapeHtml(currentUser.email || '');
+        var username = escapeHtml(currentUser.username || '');
+        var avatarUrl = currentUser.avatar_url || '';
+        var authProvider = escapeHtml(currentUser.auth_provider || 'Google');
+
+        $('#profile-display-name').text(name);
+        $('#profile-email').text(email);
+        $('#profile-username-input').val(username);
+        $('#profile-auth-provider').text(authProvider);
+        $('#profile-message').addClass('hidden').text('');
+
+        var $avatar = $('#profile-avatar');
+        $avatar.empty();
+        if (avatarUrl) {
+            $avatar.html('<img src="' + escapeHtml(avatarUrl) + '" alt="Avatar">');
+        }
+
+        CerebroAPI.get('/scores/history', {})
+            .done(function (response) {
+                var stats = response.stats || {};
+                $('#profile-member-since').text(formatMemberSince(currentUser.created_at));
+                $('#profile-total-sessions').text(stats.total_sessions != null ? stats.total_sessions : '—');
+            })
+            .fail(function () {
+                $('#profile-member-since').text(formatMemberSince(currentUser.created_at));
+                $('#profile-total-sessions').text('—');
+            });
+    }
+
+    function saveUsername() {
+        var $input = $('#profile-username-input');
+        var $message = $('#profile-message');
+        var username = $input.val().trim();
+
+        if (username.length < 3 || username.length > 24) {
+            $message.removeClass('hidden success').addClass('error').text('Username must be between 3 and 24 characters.');
+            return;
+        }
+
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            $message.removeClass('hidden success').addClass('error').text('Only letters, numbers, and underscores allowed.');
+            return;
+        }
+
+        $message.removeClass('hidden error success').text('Saving…');
+
+        CerebroAPI.post('/auth/update-profile', { username: username })
+            .done(function (result) {
+                currentUser = result.user || null;
+                renderHeaderState();
+                $message.removeClass('error').addClass('success').text('Username saved.');
+            })
+            .fail(function (error) {
+                var msg = (error && error.error) ? error.error : 'Could not save username.';
+                $message.removeClass('success').addClass('error').text(msg);
+            });
     }
 
     function logout() {
@@ -232,6 +314,23 @@ var CerebroAuth = (function ($) {
         return currentUser;
     }
 
+    function formatMemberSince(value) {
+        if (!value) {
+            return '—';
+        }
+
+        var date = new Date(value);
+        if (isNaN(date.getTime())) {
+            return '—';
+        }
+
+        return date.toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
+
     function escapeHtml(value) {
         return $('<div>').text(value == null ? '' : String(value)).html();
     }
@@ -242,6 +341,7 @@ var CerebroAuth = (function ($) {
 
     return {
         openAuth: openAuth,
+        openProfile: openProfile,
         isAuthenticated: isAuthenticated,
         getUser: getUser,
         refreshSession: refreshSession,

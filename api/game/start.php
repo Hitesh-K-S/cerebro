@@ -31,9 +31,13 @@ if (!$game) {
 
 // ── Invalidate any existing uncompleted sessions ────────
 Database::query(
-    'UPDATE game_sessions SET completed = 1, completed_at = NOW() 
+    'UPDATE game_sessions
+     SET completed = 1,
+         ended_reason = ?,
+         completed_at = NOW(),
+         last_activity_at = NOW()
      WHERE user_id = ? AND game_id = ? AND completed = 0',
-    [$userId, $game['id']]
+    ['replaced', $userId, $game['id']]
 );
 
 // ── Create new session ──────────────────────────────────

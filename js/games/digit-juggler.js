@@ -412,7 +412,7 @@ var DigitJuggler = (function ($) {
     function saveScore(dPrime) {
         if (!sessionToken) return;
         var diff = getDifficulty(level);
-        CerebroAPI.post('/game/end', {
+        var payload = {
             token: sessionToken,
             score: score,
             level_reached: level,
@@ -425,8 +425,9 @@ var DigitJuggler = (function ($) {
                 false_alarms: falseAlarms,
                 correct_rejections: correctRejections
             }
-        }).fail(function () {
-            CerebroAPI.queueForRetry('POST', '/game/end', { token: sessionToken, score: score });
+        };
+        CerebroAPI.post('/game/end', payload).fail(function () {
+            CerebroAPI.queueForRetry('POST', '/game/end', payload);
         });
     }
 
