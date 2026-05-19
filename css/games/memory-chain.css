@@ -1,0 +1,69 @@
+/* Memory Chain */
+
+.memory-chain-board {
+    width: 100%;
+}
+
+.mc-study-list {
+    display: grid;
+    gap: 12px;
+}
+
+.mc-study-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 248, 255, 0.9));
+    border: 2px solid rgba(18, 18, 24, 0.12);
+}
+
+.mc-step-number {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.12);
+    color: var(--memory-accent, #6366f1);
+    font-weight: 800;
+}
+
+.mc-step-label {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.mc-selected-row {
+    margin-bottom: 16px;
+}
+
+.mc-selected-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.mc-chip,
+.mc-placeholder {
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.1);
+    color: #1f2a6b;
+    font-weight: 700;
+}
+
+.mc-chip.locked {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(168, 85, 247, 0.12));
+}
+
+.mc-choice-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.mc-relation-card h3 span {
+    color: var(--memory-accent, #6366f1);
+}

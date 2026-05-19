@@ -1,0 +1,11 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="40" fill="#EEF2FF"/>
+  <text x="88" y="128" fill="#312E81" font-family="Space Grotesk, sans-serif" font-size="54" font-weight="700">Sequence Recall</text>
+  <rect x="88" y="188" width="1024" height="500" rx="34" fill="#FFFFFF" stroke="#C7D2FE" stroke-width="8"/>
+  <rect x="150" y="286" width="150" height="150" rx="28" fill="#A5B4FC"/>
+  <rect x="342" y="286" width="150" height="150" rx="28" fill="#818CF8"/>
+  <rect x="534" y="286" width="150" height="150" rx="28" fill="#6366F1"/>
+  <rect x="726" y="286" width="150" height="150" rx="28" fill="#4F46E5"/>
+  <rect x="918" y="286" width="150" height="150" rx="28" fill="#3730A3"/>
+  <path d="M225 504H975" stroke="#A5B4FC" stroke-width="18" stroke-linecap="round" stroke-dasharray="1 35"/>
+</svg>

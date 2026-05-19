@@ -1,0 +1,11 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="40" fill="#FFF7ED"/>
+  <text x="88" y="128" fill="#9A3412" font-family="Space Grotesk, sans-serif" font-size="54" font-weight="700">Attention Control</text>
+  <rect x="88" y="188" width="1024" height="500" rx="34" fill="#FFFFFF" stroke="#FED7AA" stroke-width="8"/>
+  <circle cx="330" cy="438" r="92" fill="#3B82F6"/>
+  <rect x="514" y="346" width="184" height="184" rx="30" fill="#F59E0B"/>
+  <path d="M886 330L972 514H800L886 330Z" fill="#10B981"/>
+  <rect x="234" y="602" width="260" height="28" rx="14" fill="#FED7AA"/>
+  <rect x="558" y="602" width="260" height="28" rx="14" fill="#FDBA74"/>
+  <rect x="862" y="602" width="170" height="28" rx="14" fill="#FB923C"/>
+</svg>

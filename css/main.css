@@ -99,7 +99,7 @@ p {
     margin: 0 auto;
     padding: 20px 24px;
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: var(--space-4);
 }
@@ -159,6 +159,10 @@ p {
 .nav-btn.active {
     background: var(--cobalt);
     color: #fff;
+}
+
+body:not(.authenticated) .nav-btn.needs-auth {
+    display: none;
 }
 
 .user-info {
@@ -1938,8 +1942,7 @@ h4 {
 }
 
 .google-signin-button {
-    min-height: 12px;
-    opacity: 0.01;
+    height: 0;
     overflow: hidden;
 }
 
@@ -1992,53 +1995,32 @@ h4 {
 .user-session {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 6px 8px 6px 6px;
+    padding: 6px 10px;
     border: var(--border);
     background: #fff;
     box-shadow: var(--shadow-hard);
 }
 
-.user-avatar {
-    width: 36px;
-    height: 36px;
-    border: var(--border);
-    object-fit: cover;
-    background: #f3efe2;
-}
-
-.user-avatar-fallback {
-    display: grid;
-    place-items: center;
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 800;
-    color: var(--orange);
-}
-
-.user-copy {
-    display: grid;
-    gap: 2px;
-    min-width: 0;
-    text-transform: none;
-    letter-spacing: 0;
-}
-
-.user-copy strong {
+.user-username {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-family: var(--font-display);
-    font-size: 0.95rem;
+    font-family: var(--font-label);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     color: #2d2926;
+    max-width: 140px;
 }
 
-.user-copy span {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.68rem;
-    color: #404945;
+#profile-trigger {
+    cursor: pointer;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+#profile-trigger:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 0 var(--ink);
 }
 
 .header-session-btn {
@@ -2871,6 +2853,74 @@ h4 {
     margin-top: 4px;
 }
 
+.stat-game-meta {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    font-family: var(--font-label);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.stats-session-list {
+    display: grid;
+    gap: var(--space-3);
+}
+
+.stat-session-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) repeat(4, auto);
+    gap: var(--space-3);
+    align-items: center;
+    padding: 16px 18px;
+    border: var(--border);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-sm);
+}
+
+.stat-session-main {
+    min-width: 0;
+}
+
+.stat-session-game {
+    font-family: var(--font-label);
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.stat-session-date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.stat-session-metric {
+    text-align: right;
+}
+
+.stat-session-label {
+    display: block;
+    font-family: var(--font-label);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.stat-session-value {
+    font-family: var(--font-label);
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.stats-empty {
+    padding: 18px 20px;
+    border: var(--border);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-sm);
+    color: var(--text-muted);
+}
+
 /* ── Stats Responsive ──────────────────────────────────── */
 @media (max-width: 720px) {
     .stats-grid {
@@ -2883,5 +2933,161 @@ h4 {
 
     .stats-game-grid {
         grid-template-columns: 1fr;
+    }
+
+    .stat-session-card {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stat-session-main {
+        grid-column: 1 / -1;
+    }
+
+    .stat-session-metric {
+        text-align: left;
+    }
+}
+
+/* ── Profile ───────────────────────────────────────────── */
+.profile-layout {
+    display: grid;
+    gap: var(--space-5);
+    max-width: 600px;
+}
+
+.profile-card {
+    padding: var(--space-5);
+    border: var(--border);
+    background: var(--surface-strong);
+    box-shadow: var(--shadow-hard);
+}
+
+.profile-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-5);
+    border-bottom: var(--border);
+}
+
+.profile-avatar {
+    width: 56px;
+    height: 56px;
+    border: var(--border);
+    background: var(--surface-inset);
+    flex-shrink: 0;
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-card-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+}
+
+.profile-email {
+    font-size: 0.82rem;
+    color: var(--muted);
+}
+
+.profile-field {
+    display: grid;
+    gap: 8px;
+}
+
+.profile-field label {
+    font-family: var(--font-label);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.profile-input-row {
+    display: flex;
+    gap: var(--space-2);
+}
+
+.profile-input {
+    flex: 1;
+    min-height: 48px;
+    padding: 0 14px;
+    border: var(--border);
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+.profile-input:focus {
+    outline: none;
+    background: #fff;
+    box-shadow: var(--shadow-cobalt);
+}
+
+.profile-hint {
+    font-size: 0.75rem;
+    color: var(--muted-soft);
+}
+
+.profile-message {
+    padding: 10px 14px;
+    border: var(--border);
+    font-size: 0.82rem;
+}
+
+.profile-message.error {
+    background: #fff0ee;
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.profile-message.success {
+    background: #edfaf4;
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.profile-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--surface-inset);
+}
+
+.profile-info-row:last-child {
+    border-bottom: 0;
+}
+
+.profile-info-label {
+    font-family: var(--font-label);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.profile-info-value {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+/* ── Profile responsive ──────────────────────────────── */
+@media (max-width: 720px) {
+    .profile-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+
+    .profile-input-row {
+        flex-direction: column;
     }
 }

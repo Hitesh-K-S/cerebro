@@ -1,0 +1,41 @@
+/* Review Rhythm */
+
+.review-rhythm-board {
+    width: 100%;
+}
+
+.rr-header {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.rr-meter {
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.88);
+    border: 2px solid rgba(18, 18, 24, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rr-meter span {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(31, 41, 55, 0.65);
+    font-weight: 700;
+}
+
+.rr-meter strong {
+    font-size: 1.5rem;
+    color: #111827;
+}
+
+@media (max-width: 720px) {
+    .rr-header,
+    .fl-choice-row {
+        grid-template-columns: 1fr;
+    }
+}

@@ -353,7 +353,7 @@ var MirrorMaze = (function ($) {
         $('#modal-gameover').removeClass('hidden');
 
         if (sessionToken) {
-            CerebroAPI.post('/game/end', {
+            var payload = {
                 token: sessionToken, score: score, level_reached: level,
                 duration_ms: gameTimer.getElapsedMs(),
                 replay: {
@@ -361,7 +361,10 @@ var MirrorMaze = (function ($) {
                         return { sequence: [p.grid], input: [p.correct ? 1 : 0], time_ms: p.time_ms };
                     })
                 }
-            }).fail(function () { });
+            };
+            CerebroAPI.post('/game/end', payload).fail(function () {
+                CerebroAPI.queueForRetry('POST', '/game/end', payload);
+            });
         }
     }
 

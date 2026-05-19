@@ -1,0 +1,13 @@
+/* Chunking Game */
+
+.cg-study,
+.cg-rebuild {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cg-chunk-card {
+    min-width: 110px;
+    text-align: center;
+}

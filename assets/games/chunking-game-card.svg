@@ -1,0 +1,10 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="40" fill="#F5F3FF"/>
+  <text x="88" y="128" fill="#5B21B6" font-family="Space Grotesk, sans-serif" font-size="54" font-weight="700">Chunking Game</text>
+  <rect x="88" y="188" width="1024" height="500" rx="34" fill="#FFFFFF" stroke="#DDD6FE" stroke-width="8"/>
+  <rect x="170" y="304" width="220" height="112" rx="28" fill="#C4B5FD"/>
+  <rect x="440" y="304" width="220" height="112" rx="28" fill="#A78BFA"/>
+  <rect x="710" y="304" width="220" height="112" rx="28" fill="#8B5CF6"/>
+  <rect x="300" y="468" width="260" height="112" rx="28" fill="#EDE9FE"/>
+  <rect x="640" y="468" width="260" height="112" rx="28" fill="#DDD6FE"/>
+</svg>

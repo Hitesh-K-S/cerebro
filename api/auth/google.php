@@ -60,7 +60,7 @@ if ($existingUser) {
 $_SESSION['user_id'] = $userId;
 
 $user = Database::fetchOne(
-    'SELECT id, username, email, display_name, avatar_url, auth_provider
+    'SELECT id, username, email, display_name, avatar_url, auth_provider, created_at
      FROM users
      WHERE id = ?',
     [$userId]
@@ -125,12 +125,24 @@ function buildDisplayName(array $googleUser): string
 
 function generateUniqueUsername(string $displayName, string $email): string
 {
-    $base = preg_replace('/[^a-z0-9]+/i', '', strtolower($displayName));
-    if ($base === '') {
-        $base = preg_replace('/[^a-z0-9]+/i', '', strtolower((string) strtok($email, '@')));
-    }
+    $adjectives = [
+        'Raging', 'Silent', 'Swift', 'Wild', 'Calm', 'Bold', 'Fierce', 'Mild',
+        'Sharp', 'Deep', 'Keen', 'Vast', 'Cool', 'Warm', 'Dark', 'Bright',
+        'Crimson', 'Cobalt', 'Amber', 'Jade', 'Iron', 'Steel', 'Frost', 'Blaze',
+        'Lunar', 'Solar', 'Storm', 'Thorn', 'Drift', 'Rush', 'Glide', 'Spark',
+        'Cipher', 'Echo', 'Pixel', 'Prime', 'Nova', 'Flux', 'Core', 'Neon',
+    ];
 
-    $base = substr($base ?: 'cerebro', 0, 24);
+    $nouns = [
+        'Trigger', 'Pulse', 'Vector', 'Vertex', 'Phantom', 'Sentinel', 'Drifter', 'Cipher',
+        'Falcon', 'Raven', 'Wolf', 'Lynx', 'Viper', 'Bison', 'Hawk', 'Owl',
+        'Matrix', 'Circuit', 'Prism', 'Lumen', 'Orbit', 'Zenith', 'Nexus', 'Forge',
+        'Anchor', 'Bridge', 'Crux', 'Dynamo', 'Ember', 'Fossil', 'Grove', 'Haven',
+        'Jasper', 'Knoll', 'Ledge', 'Monarch', 'Pebble', 'Quartz', 'Ripple', 'Sable',
+    ];
+
+    $base = $adjectives[array_rand($adjectives)] . $nouns[array_rand($nouns)];
+    $base = substr($base, 0, 24);
     $candidate = $base;
     $suffix = 1;
 

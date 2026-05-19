@@ -116,6 +116,83 @@ var CerebroApp = (function ($) {
             mode: 'Eriksen flanker paradigm',
             image: 'assets/games/flanker-task-card.svg'
         },
+        'fact-loop': {
+            module: function () { return FactLoop; },
+            name: 'Fact Loop',
+            category: 'memory',
+            difficulty: 'Medium',
+            skill: 'Active Recall',
+            duration: '4-5 min',
+            description: 'Study short facts, survive interference, and pull the right answer back from memory.',
+            mode: 'Fact retention drill',
+            image: 'assets/games/fact-loop-card.svg'
+        },
+        'memory-chain': {
+            module: function () { return MemoryChain; },
+            name: 'Memory Chain',
+            category: 'memory',
+            difficulty: 'Easy',
+            skill: 'Associative Encoding',
+            duration: '3-4 min',
+            description: 'Build stronger first-pass memory by linking meaningful sequences and reconstructing them in order.',
+            mode: 'Association chain drill',
+            image: 'assets/games/memory-chain-card.svg'
+        },
+        'review-rhythm': {
+            module: function () { return ReviewRhythm; },
+            name: 'Review Rhythm',
+            category: 'memory',
+            difficulty: 'Hard',
+            skill: 'Spaced Retrieval',
+            duration: '4-6 min',
+            description: 'Re-encounter items at expanding intervals so correct recall lasts longer than a single round.',
+            mode: 'Spaced review drill',
+            image: 'assets/games/review-rhythm-card.svg'
+        },
+        'sequence-recall': {
+            module: function () { return SequenceRecall; },
+            name: 'Sequence Recall',
+            category: 'memory',
+            difficulty: 'Easy',
+            skill: 'Order Retention',
+            duration: '3-4 min',
+            description: 'Study an ordered sequence of symbols, digits, or arrows and rebuild it exactly from memory.',
+            mode: 'Ordered recall drill',
+            image: 'assets/games/sequence-recall-card.svg'
+        },
+        'chunking-game': {
+            module: function () { return ChunkingGame; },
+            name: 'Chunking Game',
+            category: 'memory',
+            difficulty: 'Medium',
+            skill: 'Memory Compression',
+            duration: '3-5 min',
+            description: 'Practice grouping information into meaningful chunks so recall becomes faster and more reliable.',
+            mode: 'Grouped recall drill',
+            image: 'assets/games/chunking-game-card.svg'
+        },
+        'mental-stack': {
+            module: function () { return MentalStack; },
+            name: 'Mental Stack',
+            category: 'logic',
+            difficulty: 'Hard',
+            skill: 'State Tracking',
+            duration: '4-5 min',
+            description: 'Track layered state changes in your head and choose the correct final system state.',
+            mode: 'State simulation drill',
+            image: 'assets/games/mental-stack-card.svg'
+        },
+        'attention-control': {
+            module: function () { return AttentionControl; },
+            name: 'Attention Control',
+            category: 'attention',
+            difficulty: 'Medium',
+            skill: 'Selective Focus',
+            duration: '3-4 min',
+            description: 'Respond only when a stimulus matches the full rule, and ignore partial matches and distractors.',
+            mode: 'Rule-gated focus drill',
+            image: 'assets/games/attention-control-card.svg'
+        },
         'syllogisms': {
             module: function () { return Syllogisms; },
             name: 'Syllogisms',
@@ -166,6 +243,11 @@ var CerebroApp = (function ($) {
         $(document).on('click', '.nav-btn', function () {
             var viewId = $(this).data('view');
             if (!viewId) {
+                return;
+            }
+
+            if ($(this).is('.needs-auth') && window.CerebroAuth && !CerebroAuth.isAuthenticated()) {
+                CerebroAuth.openAuth('Sign in to view your statistics.');
                 return;
             }
 
@@ -269,6 +351,13 @@ var CerebroApp = (function ($) {
             'rapid-sort': { desc: 'A speed exercise for sorting signals quickly without losing accuracy.', rules: ['Sort each signal left or right', 'Follow the current category rule', 'Move quickly while staying accurate', 'Consistency builds stronger results'] },
             'word-grid': { desc: 'A semantic memory exercise that challenges your ability to remember words seen briefly in a grid.', rules: ['Watch the grid of words carefully', 'A target word will appear', 'Answer if the word was in the grid', 'Speed and accuracy both count toward your score'] },
             'flanker-task': { desc: 'A selective attention exercise where you respond to the center arrows direction while ignoring flanking distractors.', rules: ['Five arrows appear — focus on the center one', 'Press the key matching the center arrows direction', 'Ignore the flanking arrows on both sides', 'Speed and accuracy both count toward your score'] },
+            'fact-loop': { desc: 'A study-oriented retention exercise where you memorize short facts, handle a brief distraction, then actively retrieve the right answer.', rules: ['Study the fact cards for the round', 'Complete the short interference checks', 'Answer the recall prompt from memory', 'Correct answers after interruption are worth the most'] },
+            'memory-chain': { desc: 'An encoding drill that helps information stick by linking meaningful steps into a memorable sequence.', rules: ['Study the chain in order', 'Rebuild the same order from memory', 'Answer the follow-up before-and-after prompt', 'Notice how each step connects to the next one'] },
+            'review-rhythm': { desc: 'A spaced-retrieval exercise that brings items back after increasing delays so they stay with you longer.', rules: ['Encode each new item carefully', 'Recall it when it comes back later', 'Items you miss return sooner for extra practice', 'Aim to move more items into mastered status'] },
+            'sequence-recall': { desc: 'A direct order-memory drill where you study a short sequence and then reconstruct it exactly from memory.', rules: ['Watch the whole sequence in order', 'Rebuild it using the token pad', 'Use reset if you lose the pattern', 'Accuracy matters more than rushing'] },
+            'chunking-game': { desc: 'A memory drill that rewards grouping information into compact, meaningful chunks instead of remembering isolated fragments.', rules: ['Study the chunk groups carefully', 'Rebuild the chunks in the same order', 'Think in grouped packets, not single characters', 'Chunk quality improves your recall speed'] },
+            'mental-stack': { desc: 'A state-tracking drill where you mentally simulate layered changes and choose the final outcome.', rules: ['Read the initial state carefully', 'Track each action in sequence', 'Choose the correct final state', 'Stay disciplined when actions reverse earlier ones'] },
+            'attention-control': { desc: 'A selective-attention drill where you respond only to stimuli that match the full active rule.', rules: ['Memorize the current target color and shape', 'Tap only exact matches', 'Ignore partial matches and non-targets', 'Adapt quickly when the rule changes'] },
             'syllogisms': { desc: 'A deductive reasoning exercise where you evaluate whether conclusions follow logically from given premises.', rules: ['Read the premises carefully', 'Decide if the conclusion follows logically', 'Press Valid or Invalid based on logic alone', 'Dont let real-world knowledge override strict logic'] }
         };
 
@@ -521,107 +610,51 @@ var CerebroApp = (function ($) {
     // ══════════════════════════════════════════════════════
 
     function loadStats() {
-        var gameSlugs = Object.keys(GAMES);
-        var allScores = [];
-        var loaded = 0;
-
-        function finalize() {
-            renderStats(allScores);
-        }
-
-        if (gameSlugs.length === 0) { finalize(); return; }
-
-        gameSlugs.forEach(function (slug) {
-            var req = CerebroAPI.get('/scores/history', { game: slug, limit: 20 });
-            req.done(function (response) {
-                var scores = response.scores || [];
-                scores.forEach(function (s) { s.game = slug; });
-                allScores = allScores.concat(scores);
+        CerebroAPI.get('/scores/history', { limit: 200 })
+            .done(function (response) {
+                renderStats(response);
+            })
+            .fail(function () {
+                renderStats({
+                    stats: {},
+                    categories: [],
+                    games: [],
+                    recent_sessions: []
+                });
             });
-            req.fail(function () {
-                // Silently skip failed stats queries
-            });
-            req.then(function () {
-                loaded++;
-                if (loaded >= gameSlugs.length) finalize();
-            });
-        });
     }
 
-    function renderStats(allScores) {
-        var gameSlugs = Object.keys(GAMES);
-
-        // Overall stats
-        var totalSessions = allScores.length;
-        var totalAccuracy = 0;
-        var accuracyCount = 0;
-        var bestScore = 0;
-        var bestTier = '';
-        var totalMs = 0;
-
-        // Per-category accuracy
-        var catData = {};
-        gameSlugs.forEach(function (slug) {
-            var cat = GAMES[slug].category;
-            if (!catData[cat]) catData[cat] = { total: 0, correct: 0, count: 0 };
-        });
-
-        // Per-game bests
-        var gameBests = {};
-        gameSlugs.forEach(function (slug) { gameBests[slug] = 0; });
-
-        allScores.forEach(function (s) {
-            var score = Number(s.score || 0);
-            if (score > bestScore) bestScore = score;
-            if (score > (gameBests[s.game] || 0)) gameBests[s.game] = score;
-
-            totalMs += Number(s.duration_ms || 0);
-
-            var acc = Number(s.accuracy || 0);
-            if (acc > 0) {
-                totalAccuracy += acc;
-                accuracyCount++;
-                var cat = GAMES[s.game] ? GAMES[s.game].category : null;
-                if (cat && catData[cat]) {
-                    catData[cat].total += acc;
-                    catData[cat].count++;
-                }
-            }
-        });
-
-        // Determine best tier
+    function renderStats(payload) {
+        var stats = payload && payload.stats ? payload.stats : {};
+        var categories = payload && payload.categories ? payload.categories : [];
+        var games = payload && payload.games ? payload.games : [];
+        var recentSessions = payload && payload.recent_sessions ? payload.recent_sessions : [];
+        var totalSessions = Number(stats.total_sessions || stats.total_games || 0);
+        var bestScore = Number(stats.best_score || 0);
         var tierThresholds = [
             { min: 5000, label: 'Tier IV' }, { min: 2000, label: 'Tier III' },
             { min: 1000, label: 'Tier II' }, { min: 500, label: 'Tier I' }
         ];
+        var bestTier = '';
         for (var t = 0; t < tierThresholds.length; t++) {
             if (bestScore >= tierThresholds[t].min) { bestTier = tierThresholds[t].label; break; }
         }
         if (!bestTier && totalSessions > 0) bestTier = 'Unranked';
 
-        // Format time
-        var totalSec = Math.round(totalMs / 1000);
-        var timeStr = totalSec >= 3600
-            ? Math.floor(totalSec / 3600) + 'h ' + Math.floor((totalSec % 3600) / 60) + 'm'
-            : totalSec >= 60
-                ? Math.floor(totalSec / 60) + 'm ' + (totalSec % 60) + 's'
-                : totalSec + 's';
-
-        var avgAcc = accuracyCount > 0 ? Math.round(totalAccuracy / accuracyCount) : 0;
-
-        // Render overview
         $('#stat-total-sessions .stat-card-value').text(totalSessions);
-        $('#stat-total-time .stat-card-value').text(timeStr);
-        $('#stat-avg-accuracy .stat-card-value').text(avgAcc > 0 ? avgAcc + '%' : '—');
-        $('#stat-best-tier .stat-card-value').text(bestTier);
+        $('#stat-total-time .stat-card-value').text(formatDuration(stats.total_time_ms || 0));
+        $('#stat-avg-accuracy .stat-card-value').text(Number(stats.avg_accuracy || 0) > 0 ? Math.round(stats.avg_accuracy) + '%' : '—');
+        $('#stat-best-tier .stat-card-value').text(bestTier || '—');
 
-        // Render category breakdown
         var catLabels = { memory: 'Memory', attention: 'Attention', logic: 'Logic', speed: 'Speed' };
         var $catGrid = $('#stats-categories');
         $catGrid.empty();
-        Object.keys(catData).forEach(function (cat) {
-            var d = catData[cat];
-            var catAcc = d.count > 0 ? Math.round(d.total / d.count) : 0;
+        if (!categories.length) {
+            $catGrid.append('<div class="stats-empty">Play a few drills and category trends will show up here.</div>');
+        }
+        categories.forEach(function (entry) {
+            var cat = entry.category;
+            var catAcc = Number(entry.avg_accuracy || 0) > 0 ? Math.round(entry.avg_accuracy) : 0;
             var barWidth = catAcc > 0 ? catAcc + '%' : '0%';
             var html =
                 '<div class="stat-cat-card category-' + cat + '">' +
@@ -630,25 +663,85 @@ var CerebroApp = (function ($) {
                         '<span class="stat-cat-value">' + (catAcc > 0 ? catAcc + '%' : '—') + '</span>' +
                     '</div>' +
                     '<div class="stat-bar-track"><div class="stat-bar-fill" style="width: ' + barWidth + '"></div></div>' +
-                    '<div class="stat-cat-sessions">' + d.count + ' session' + (d.count !== 1 ? 's' : '') + '</div>' +
+                    '<div class="stat-cat-sessions">' + Number(entry.sessions || 0) + ' session' + (Number(entry.sessions || 0) !== 1 ? 's' : '') + '</div>' +
                 '</div>';
             $catGrid.append(html);
         });
 
-        // Render game bests
         var $gameGrid = $('#stats-games');
         $gameGrid.empty();
-        gameSlugs.forEach(function (slug) {
-            var reg = GAMES[slug];
-            var best = gameBests[slug] || 0;
+        if (!games.length) {
+            $gameGrid.append('<div class="stats-empty">No saved sessions yet. Finish a game while signed in to build your record.</div>');
+        }
+        games.forEach(function (entry) {
             var html =
                 '<div class="stat-game-card">' +
-                    '<div class="stat-game-name">' + escapeHtml(reg.name) + '</div>' +
-                    '<div class="stat-game-category stat-cat-' + reg.category + '">' + (catLabels[reg.category] || reg.category) + '</div>' +
-                    '<div class="stat-game-best">' + (best > 0 ? best.toLocaleString() : '—') + '</div>' +
+                    '<div class="stat-game-name">' + escapeHtml(entry.name) + '</div>' +
+                    '<div class="stat-game-category stat-cat-' + entry.category + '">' + (catLabels[entry.category] || entry.category) + '</div>' +
+                    '<div class="stat-game-best">' + (Number(entry.best_score || 0) > 0 ? Number(entry.best_score).toLocaleString() : '—') + '</div>' +
+                    '<div class="stat-game-meta">' + Number(entry.sessions || 0) + ' sessions' + (Number(entry.avg_accuracy || 0) > 0 ? ' • ' + Math.round(entry.avg_accuracy) + '% avg accuracy' : '') + '</div>' +
                 '</div>';
             $gameGrid.append(html);
         });
+
+        renderRecentSessions(recentSessions);
+    }
+
+    function renderRecentSessions(recentSessions) {
+        var $sessionList = $('#stats-sessions');
+        if ($sessionList.length === 0) return;
+
+        $sessionList.empty();
+
+        if (!recentSessions.length) {
+            $sessionList.append('<div class="stats-empty">Recent completed sessions will appear here once your runs are saved.</div>');
+            return;
+        }
+
+        recentSessions.forEach(function (entry) {
+            var html =
+                '<div class="stat-session-card">' +
+                    '<div class="stat-session-main">' +
+                        '<div class="stat-session-game">' + escapeHtml(entry.game_name || entry.game_slug || 'Unknown Game') + '</div>' +
+                        '<div class="stat-session-date">' + escapeHtml(formatDateTime(entry.created_at)) + '</div>' +
+                    '</div>' +
+                    '<div class="stat-session-metric">' +
+                        '<span class="stat-session-label">Score</span>' +
+                        '<span class="stat-session-value">' + Number(entry.score || 0).toLocaleString() + '</span>' +
+                    '</div>' +
+                    '<div class="stat-session-metric">' +
+                        '<span class="stat-session-label">Accuracy</span>' +
+                        '<span class="stat-session-value">' + (Number(entry.accuracy || 0) > 0 ? Math.round(entry.accuracy) + '%' : '—') + '</span>' +
+                    '</div>' +
+                    '<div class="stat-session-metric">' +
+                        '<span class="stat-session-label">Level</span>' +
+                        '<span class="stat-session-value">' + escapeHtml(String(entry.level_reached || '—')) + '</span>' +
+                    '</div>' +
+                    '<div class="stat-session-metric">' +
+                        '<span class="stat-session-label">Time</span>' +
+                        '<span class="stat-session-value">' + escapeHtml(formatDuration(entry.duration_ms || 0)) + '</span>' +
+                    '</div>' +
+                '</div>';
+            $sessionList.append(html);
+        });
+    }
+
+    function formatDuration(durationMs) {
+        var totalSec = Math.round(Number(durationMs || 0) / 1000);
+        if (totalSec >= 3600) {
+            return Math.floor(totalSec / 3600) + 'h ' + Math.floor((totalSec % 3600) / 60) + 'm';
+        }
+        if (totalSec >= 60) {
+            return Math.floor(totalSec / 60) + 'm ' + (totalSec % 60) + 's';
+        }
+        return totalSec + 's';
+    }
+
+    function formatDateTime(value) {
+        if (!value) return 'Unknown date';
+        var date = new Date(value);
+        if (isNaN(date.getTime())) return String(value);
+        return date.toLocaleDateString() + ' • ' + date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     }
 
     function init() {
